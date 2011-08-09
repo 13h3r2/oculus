@@ -4,7 +4,7 @@ Created on 08.08.2011
 @author: ar
 '''
 
-import cx_Oracle
+#import cx_Oracle
 
 
 class DatabaseStorage:
@@ -28,13 +28,13 @@ class DatabaseInfo(object):
         
     def gather(self):
         self.schemes = []
-        connection = cx_Oracle.connect(cx_Oracle.makedsn(self.host, 1521, self.sid))
-        cursor = connection.cursor()
-        cursor.execute('''
-            
-        ''')
-        cursor.close()
-        connection.close()
+#        connection = cx_Oracle.connect(cx_Oracle.makedsn(self.host, 1521, self.sid))
+#        cursor = connection.cursor()
+#        cursor.execute('''
+#            
+#        ''')
+#        cursor.close()
+#        connection.close()
         
         
 class SchemeInfo:

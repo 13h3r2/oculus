@@ -1,8 +1,34 @@
 <html>
-	<body>
-		
-		
-	</body>
-	
-	
+    <head>
+        <link rel="stylesheet" type="text/css" href="main.css" />
+    </head>
+<body>
+    
+    <script src="jquery-1.6.2.js"></script>
+    <a href="#" id="reladList">Reload server list</a>
+    <script type="text/javascript">
+        $(document).ready(function(){
+           $('#reladList').click(loadDatabaseList);
+         });
+        
+        function loadDatabaseList(event){
+            $.get("/api/database/list", function(json) {
+            	var table = $('#dbTable')
+            	table.empty();
+            	for(i in json) {
+            		table.append('<ul>');
+            		table.append('<li>' + json[i].host + '</li>');
+            		table.append('<li>' + json[i].sid + '</li>');
+            		table.append('</ul>');
+            	}
+            	console.log(json);
+            });     
+        }
+	</script>
+    
+    <h1>List of DB</h1>
+    <div id="dbTable">
+    </div>
+
+</body>
 </html>

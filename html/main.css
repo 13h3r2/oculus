@@ -1,0 +1,9 @@
+li
+{
+  display: inline;
+  border: solid 1px white;
+  padding: 5px;
+  margin: 5px;
+  min-width: 150px;
+  background-color: #DDDDB7;
+}

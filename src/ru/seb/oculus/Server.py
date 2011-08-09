@@ -1,10 +1,9 @@
 from http.server import BaseHTTPRequestHandler
+from ru.seb.oculus.Database import DatabaseStorage, DatabaseInfo
 import json
 import logging
-import socketserver
-from ru.seb.oculus.Database import DatabaseStorage, DatabaseInfo
-
-
+import os
+import shutil
 
 class DatabaseInfoHandler:
     def handle(self, path):
@@ -63,14 +62,19 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(result)
             return
-        self.send_response(403)
-
-
-
-if __name__ == '__main__':
-    
-    httpd = socketserver.TCPServer(("", 8000), Handler)
-    httpd.serve_forever()
-
-    
+        
+        try:
+            f = open("../html" + self.path, 'rb')            
+        except IOError:
+            self.send_response(404)
+            return None
+            
+        self.send_response(200)
+        fs = os.fstat(f.fileno())
+        self.send_header("Content-Length", str(fs[6]))
+        self.send_header("Last-Modified", self.date_time_string(fs.st_mtime))
+        self.end_headers()
+        
+        shutil.copyfileobj(f, self.wfile)
+        f.close()
     
