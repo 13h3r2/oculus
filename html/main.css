@@ -1,9 +1,45 @@
-li
-{
-  display: inline;
-  border: solid 1px white;
-  padding: 5px;
-  margin: 5px;
-  min-width: 150px;
-  background-color: #DDDDB7;
+
+div.dbTable {
+	width: 400px;
+}
+
+div.dbTable div.dbItem {
+	background-color: ccffcc;
+	border: 1px solid;
+	border-color: 55ff55;
+	margin-bottom: 10px;
+	width: 100%;    	
+}
+
+div.dbTable div.dbItem div.dbLoading {
+	text-align: center;
+	vertical-align: text-top;
+}
+div.dbTable div.dbItem div.schema div.size {
+    padding: 5px;
+}
+div.dbTable div.dbItem div.schema div.name {
+    float: left;
+	border-right: 1px solid;
+	border-color: 55ff55;
+    width: 70%; 
+    padding: 5px;
+    margin-right: 5px;	
+}
+div.dbTable div.dbItem div.dbInfo div.name {	
+	background-color: aaffaa;
+	margin: 0;
+    padding-bottom: 5px;
+    padding-top: 5px;
+	border-bottom: 1px solid;
+	border-color: 55ff55;
+	font-weight: bold;
+	text-align:center;
+	
+	width: 100% ;
+}
+div.dbTable div.dbItem div.dbInfo div.sid {
+    padding-bottom: 5px;
+    padding-top: 5px;
+	display: none;
 }

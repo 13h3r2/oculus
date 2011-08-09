@@ -16,10 +16,13 @@
             	var table = $('#dbTable')
             	table.empty();
             	for(i in json) {
-            		table.append('<ul>');
-            		table.append('<li>' + json[i].host + '</li>');
-            		table.append('<li>' + json[i].sid + '</li>');
-            		table.append('</ul>');
+            		table.append(
+            		'<div class="dbItem">'+
+            		'<div class="dbInfo">'+
+            		'<div class="name">'+ json[i].sid + ' @ ' +json[i].host + '</div>'+
+            		'<div class="dbLoading">Loading <img src="loading_icon.gif" /></div>'+
+            		'</div>'+
+            		'</div>');
             	}
             	console.log(json);
             });     
@@ -27,7 +30,54 @@
 	</script>
     
     <h1>List of DB</h1>
-    <div id="dbTable">
+    <div class="dbTable" id="dbTable">
+        <div class="dbItem">
+            <div class="dbInfo">
+                <div class="name">mox04.sibirenergo-billing.ru</div>
+                <div class="sid">qaasr</div>
+            </div>
+            <div class="schema">
+                <div class="name">DEMO_KEMEROVO</div>
+                <div class="size">37GB</div>
+            </div>
+            <div class="schema">
+                <div class="name">DEV_RENAT123</div>
+                <div class="size">38GB</div>
+            </div>
+            <div class="schema">
+                <div class="name">DEV_RasdfaENAT</div>
+                <div class="size">38GB</div>
+            </div>
+            <div class="schema">
+                <div class="name">DEV_RE123NAT</div>
+                <div class="size">38GB</div>
+            </div>
+            <div class="schema">
+                <div class="name">DEV_RENA3453T</div>
+                <div class="size">38GB</div>
+            </div>
+        </div>
+        <div class="dbItem">
+            <div class="dbInfo">
+                <div class="name">mox04.sibirenergo-billing.ru</div>
+                <div class="sid">qaasr</div>
+            </div>
+            <div class="schema">
+                <div class="name">DEMO_KEMEROVO</div>
+                <div class="size">37GB</div>
+            </div>
+            <div class="schema">
+                <div class="name">DEV_RENAT123</div>
+                <div class="size">38GB</div>
+            </div>
+        </div>
+        <div class="dbItem">
+            <div class="dbInfo">
+                <div class="name">mox04.sibirenergo-billing.ru</div>
+                <div class="sid">qaasr</div>
+            </div>
+            <div class="dbLoading">Loading <img src="loading_icon.gif" /></div>
+        </div>
     </div>
 
 </body>
