@@ -1,9 +1,9 @@
 <html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="main.css" />
-    </head>
+<head>
+<link rel="stylesheet" type="text/css" href="main.css" />
+</head>
 <body>
-    
+
     <script src="jquery-1.6.2.js"></script>
     <a href="#" id="reladList">Reload server list</a>
     <script type="text/javascript">
@@ -18,17 +18,42 @@
             	for(i in json) {
             		table.append(
             		'<div class="dbItem">'+
-            		'<div class="dbInfo">'+
+            		'<div class="dbInfo" host="'+json[i].host+'/'+json[i].sid+'">'+
             		'<div class="name">'+ json[i].sid + ' @ ' +json[i].host + '</div>'+
-            		'<div class="dbLoading">Loading <img src="loading_icon.gif" /></div>'+
             		'</div>'+
+            		'<div class="dbLoading">Loading <img src="loading_icon.gif" /></div>'+
             		'</div>');
             	}
             	console.log(json);
+            	$('.dbLoading').click(loadSchemesList); 
             });     
         }
+        
+        function loadSchemesList(e) {
+        	var t = $(e.target);
+        	//disable double click 
+        	t.unbind('click');
+        	
+        	item = t.parents('.dbItem');
+            hostId = item.children('.dbInfo').attr('host');
+            console.log(hostId);
+            var requestUrl = "/api/database/info/" + hostId;
+            $.get(requestUrl, function(json) {
+            	item.children().remove(".dbLoading");
+            	t.parents('.dbItem').children().remove(".schema");                
+                for(i in json) {
+                	item.append(''+
+                	  '<div class="schema">' + 
+                	  '<div class="name">'+json[i].name+'</div>' + 
+                	  '<div class="size">'+json[i].size+'</div>' + 
+                	  '</div>' 
+                	);
+                }
+            });
+        }
+        
 	</script>
-    
+
     <h1>List of DB</h1>
     <div class="dbTable" id="dbTable">
         <div class="dbItem">
@@ -76,7 +101,9 @@
                 <div class="name">mox04.sibirenergo-billing.ru</div>
                 <div class="sid">qaasr</div>
             </div>
-            <div class="dbLoading">Loading <img src="loading_icon.gif" /></div>
+            <div class="dbLoading">
+                Loading <img src="loading_icon.gif" />
+            </div>
         </div>
     </div>
 

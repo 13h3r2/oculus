@@ -4,10 +4,10 @@ Created on 08.08.2011
 @author: ar
 '''
 
-from ru.seb.oculus import Database
-from ru.seb.oculus.Database import DatabaseInfo
+from oculus import Database
+from oculus.Database import DatabaseInfo
+from oculus.Server import Handler
 import socketserver
-from ru.seb.oculus.Server import Handler
 
 if __name__ == '__main__':
     print('go!')
