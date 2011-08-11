@@ -1,14 +1,19 @@
+body {
+	font-family: sans-serif;
+}
+
 
 div.dbTable {
-	width: 400px;
 }
 
 div.dbTable div.dbItem {
+	width: 400px;
 	background-color: ccffcc;
 	border: 1px solid;
 	border-color: 55ff55;
 	margin-bottom: 10px;
-	width: 100%;    	
+	float: left;
+	margin: 20px;
 }
 
 div.dbTable div.dbItem div.dbLoading {
@@ -18,6 +23,17 @@ div.dbTable div.dbItem div.dbLoading {
 div.dbTable div.dbItem div.schema div.size {
     padding: 5px;
 }
+
+div.dbTable div.dbItem div.dbOperations a{
+	text-decoration: none;
+}
+div.dbTable div.dbItem div.dbOperations {
+    padding: 5px;
+    border-bottom: 1px solid;
+    border-color: 55ff55;
+    text-align: center;    
+}
+
 div.dbTable div.dbItem div.schema div.name {
     float: left;
 	border-right: 1px solid;
