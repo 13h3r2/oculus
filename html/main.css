@@ -1,12 +1,14 @@
+.container {
+	
+}
+
+
 body {
 	font-family: sans-serif;
 }
 
 
-div.dbTable {
-}
-
-div.dbTable div.dbItem {
+div.dbItem {
 	width: 400px;
 	background-color: ccffcc;
 	border: 1px solid;
@@ -16,25 +18,25 @@ div.dbTable div.dbItem {
 	margin: 20px;
 }
 
-div.dbTable div.dbItem div.dbLoading {
+div.dbItem div.dbLoading {
 	text-align: center;
 	vertical-align: text-top;
 }
-div.dbTable div.dbItem div.schema div.size {
+div.dbItem div.schema div.size {
     padding: 5px;
 }
 
-div.dbTable div.dbItem div.dbOperations a{
+div.dbItem div.dbOperations a{
 	text-decoration: none;
 }
-div.dbTable div.dbItem div.dbOperations {
+div.dbItem div.dbOperations {
     padding: 5px;
     border-bottom: 1px solid;
     border-color: 55ff55;
     text-align: center;    
 }
 
-div.dbTable div.dbItem div.schema div.name {
+div.dbItem div.schema div.name {
     float: left;
 	border-right: 1px solid;
 	border-color: 55ff55;
@@ -42,7 +44,7 @@ div.dbTable div.dbItem div.schema div.name {
     padding: 5px;
     margin-right: 5px;	
 }
-div.dbTable div.dbItem div.dbInfo div.name {	
+div.dbItem div.dbInfo div.name {	
 	background-color: aaffaa;
 	margin: 0;
     padding-bottom: 5px;
@@ -54,7 +56,7 @@ div.dbTable div.dbItem div.dbInfo div.name {
 	
 	width: 100% ;
 }
-div.dbTable div.dbItem div.dbInfo div.sid {
+div.dbItem div.dbInfo div.sid {
     padding-bottom: 5px;
     padding-top: 5px;
 	display: none;

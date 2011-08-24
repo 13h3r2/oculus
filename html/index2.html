@@ -1,0 +1,149 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="main2.css" />
+<link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap-1.1.0.min.css">
+</head>
+<body>
+
+    <script src="jquery-1.6.2.js"></script>    
+    <script type="text/javascript">
+        $(document).ready(function(){
+           $('#reloadDBList').click(loadDatabaseList);
+         });
+        
+        function loadDatabaseList(event){
+            $.get("/api/database/list", function(json) {
+            	console.log(json);
+            	$('.dbItem').remove();
+            	table = $("#db");
+            	for(i in json) {
+            		table.append(
+            				'<div class="dbItem container" host="'+json[i].host+'/'+json[i].sid+'">\
+                                <div class="row dbInfo">\
+                                    <div class="span12 columns name"><h2>'+ json[i].sid + ' @ ' +json[i].host + '</h2></div>\
+                                    <div class="span4 columns right">\
+                                        <a href="#" class="btn dbRefresh">refresh</a>\
+                                        <a href="#" class="btn dbHide">-</a>\
+                                    </div>\
+                                </div>\
+                                <table class="common-table zebra-striped">\
+                                    <thead>\
+                                        <tr>\
+                                            <th>Name</th>\
+                                            <th>Size</th>\
+                                            <th>Connections</th> \
+                                            <th>&nbsp</th> \
+                                        </tr>\
+                                    </thead>\
+                                    <tbody>\
+                                        <tr class="dbLoading"><td colspan="4" class="center">Loading <img src="loading_icon.gif" /></td></tr>\
+                                    </tbody>\
+                                </table>\
+                              </div>\
+                                    '
+                    );
+            	}
+            	table.find('.dbLoading').hide();
+            	$('.dbRefresh').click(loadSchemesList);
+                $('.dbRefresh').click();
+                
+                $('.dbHide').click(function(e) {
+                	link = $(e.target);
+                	table = link.parents('.dbItem').children('table');
+                	if( table.is(':visible') ) {
+                		table.hide();
+                		link.text("+")
+                	} else {
+                		table.show();
+                		link.text("-")
+                	}
+                });
+            });     
+        }
+        
+        function loadSchemesList(e) {
+        	link = $(e.target);
+        	
+        	//disable double click 
+        	link.unbind('click');
+        	link.attr('disabled', 'disabled');
+        	
+        	
+        	item = link.parents('.dbItem');
+        	item.find(".schema").remove();                
+        	item.find('.dbLoading').show();
+        	
+            hostId = item.attr('host');
+            var requestUrl = "/api/database/info/" + hostId;
+            console.log('sent ' + requestUrl);
+            $.get(requestUrl, function(json) {
+            	hostId = requestUrl.substr("/api/database/info/".length);
+            	item = $('.dbItem[host="'+hostId+'"]');            	
+            	item.find('.dbLoading').hide();
+            	table = item.find("table").find("tbody");
+                for(i in json) {
+                	table.append('\
+                            <tr class="schema">\
+                            <td>'+json[i].name+'</td>\
+                            <td>'+json[i].size+'GB</td>\
+                            <td>0</td>\
+                            <td class="right"><a class="btn danger">Drop</a></td>\
+                            </tr>');
+                }
+                link = item.find('.dbRefresh');
+                link.click(loadSchemesList);
+                link.removeAttr('disabled');
+            });
+        }
+        
+	</script>
+<br/>
+<br/>
+<div class="container" id="db">
+    <div class="container">
+        <div class="row">
+            <div class="span12 columns">
+                <h1>Databases</h1>    
+            </div>
+            <div class="span4 columns right">
+                <a href="#" id="reloadDBList" class="btn">Reload server list</a>
+            </div>
+        </div>    
+    </div>
+    <div class="dbItem container" host="mox04.sibirenergo-billing.ru/qaasr">
+        <div class="row dbInfo">
+            <div class="span12 columns name"><h2>mox04.sibirenergo-billing.ru:qaasr</h2></div>
+            <div class="span4 columns right">
+                <a href="#" class="btn dbRefresh">refresh</a>
+                <a href="#" class="btn dbHide">-</a>
+            </div>
+        </div>
+        <table class="common-table zebra-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Size</th>
+                    <th>Connections</th> 
+                    <th>&nbsp</th> 
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="4" class="center">Loading <img src="loading_icon.gif" /></td></tr>
+                <tr class="schema">
+                    <td>DEMO_KEMEROVO</td>
+                    <td>45GB</td>
+                    <td>0</td>
+                    <td class="right"><a class="btn danger">Drop</a></td>
+                </tr>                    
+                <tr class="schema">
+                    <td>DEMO_KEMEROVO</td>
+                    <td>45GB</td>
+                    <td>0</td>
+                    <td class="right"><a class="btn danger">Drop</a></td>
+                </tr>                    
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
