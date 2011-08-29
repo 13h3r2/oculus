@@ -1,3 +1,5 @@
 src/oculus/databases.pickle
 *__pycache__*
 .pydevproject
+*.pyc
+.pydevproject
