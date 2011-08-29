@@ -40,14 +40,16 @@ class DatabaseInfo(object):
         connection = cx_Oracle.connect(self.sys_login, self.sys_password, cx_Oracle.makedsn(self.host, 1521, self.sid), cx_Oracle.SYSDBA)        
         cursor = connection.cursor()
         cursor.execute('''
-select owner, ''||trunc(sum(bytes)/1024/1024/1024, 1) from dba_segments 
-group by owner 
+select owner, ''||trunc(sum(bytes)/1024/1024/1024, 1), nvl(c_count, 0)
+from dba_segments dbs
+left outer join ( select count(*) as c_count, s.username as username from v$session s group by s.username) s on s.username = dbs.owner
+group by owner, c_count
 having sum(bytes) > 5000000000
 order by sum(bytes) desc
         ''')
         self.schemes = []
         for record in cursor.fetchall():
-            self.schemes.append(SchemeInfo(record[0], record[1]))
+            self.schemes.append(SchemeInfo(record[0], record[1], record[2]))
         cursor.close()
         connection.close()
         return self.schemes
@@ -55,7 +57,8 @@ order by sum(bytes) desc
         
 class SchemeInfo:
     
-    def __init__(self, name, size):
+    def __init__(self, name, size, connection_count):
         self.name = name
         self.size = size
+        self.connection_count = connection_count
         
