@@ -5,7 +5,40 @@
 </head>
 <body>
 
-    <script src="jquery-1.6.2.js"></script>    
+    <script src="jquery-1.6.2.js"></script>
+    <script src="jquery.tmpl.js"></script>   
+    <script id = "tmplDbItem" type="text/x-jquery-tmpl">
+      <div class="dbItem container" host="${host}/${sid}">
+        <div class="row dbInfo">
+            <div class="span12 columns name"><h2>${sid} @ ${host}</h2></div>
+            <div class="span4 columns right">
+                <a href="#" class="btn dbRefresh">refresh</a>
+                <a href="#" class="btn dbHide">-</a>
+            </div>
+        </div>
+        <table class="common-table zebra-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Size</th>
+                    <th>Connections</th> 
+                    <th>&nbsp</th> 
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="dbLoading"><td colspan="4" class="center">Loading <img src="loading_icon.gif" /></td></tr>
+            </tbody>
+        </table>
+      </div>
+    </script> 
+    <script id = "tmplDbSchema" type="text/x-jquery-tmpl">
+                            <tr class="schema">
+                            <td>${name}</td>
+                            <td>${size}GB</td>
+                            <td>0</td>
+                            <td class="right"><a class="btn danger">Drop</a></td>
+                            </tr>
+    </script> 
     <script type="text/javascript">
         $(document).ready(function(){
            $('#reloadDBList').click(loadDatabaseList);
@@ -17,31 +50,7 @@
             	$('.dbItem').remove();
             	table = $("#db");
             	for(i in json) {
-            		table.append(
-            				'<div class="dbItem container" host="'+json[i].host+'/'+json[i].sid+'">\
-                                <div class="row dbInfo">\
-                                    <div class="span12 columns name"><h2>'+ json[i].sid + ' @ ' +json[i].host + '</h2></div>\
-                                    <div class="span4 columns right">\
-                                        <a href="#" class="btn dbRefresh">refresh</a>\
-                                        <a href="#" class="btn dbHide">-</a>\
-                                    </div>\
-                                </div>\
-                                <table class="common-table zebra-striped">\
-                                    <thead>\
-                                        <tr>\
-                                            <th>Name</th>\
-                                            <th>Size</th>\
-                                            <th>Connections</th> \
-                                            <th>&nbsp</th> \
-                                        </tr>\
-                                    </thead>\
-                                    <tbody>\
-                                        <tr class="dbLoading"><td colspan="4" class="center">Loading <img src="loading_icon.gif" /></td></tr>\
-                                    </tbody>\
-                                </table>\
-                              </div>\
-                                    '
-                    );
+            		$('#tmplDbItem').tmpl(json[i]).appendTo(table);            		
             	}
             	table.find('.dbLoading').hide();
             	$('.dbRefresh').click(loadSchemesList);
@@ -77,18 +86,14 @@
             var requestUrl = "/api/database/info/" + hostId;
             console.log('sent ' + requestUrl);
             $.get(requestUrl, function(json) {
+            	console.log('got');
+            	console.log(json);
             	hostId = requestUrl.substr("/api/database/info/".length);
             	item = $('.dbItem[host="'+hostId+'"]');            	
             	item.find('.dbLoading').hide();
             	table = item.find("table").find("tbody");
                 for(i in json) {
-                	table.append('\
-                            <tr class="schema">\
-                            <td>'+json[i].name+'</td>\
-                            <td>'+json[i].size+'GB</td>\
-                            <td>0</td>\
-                            <td class="right"><a class="btn danger">Drop</a></td>\
-                            </tr>');
+                	$('#tmplDbSchema').tmpl(json[i]).appendTo(table);   
                 }
                 link = item.find('.dbRefresh');
                 link.click(loadSchemesList);
