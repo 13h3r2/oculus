@@ -17,13 +17,13 @@
                 <a href="#" class="btn dbHide">-</a>
             </div>
         </div>
-        <table class="common-table zebra-striped schemesList">
+        <table class="schemesList">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Size</th>
-                    <th>Connections</th> 
-                    <th>&nbsp</th> 
+                    <th width="50%">Name</th>
+                    <th width="10%">Size</th>
+                    <th width="10%">Connections</th> 
+                    <th width="30%">&nbsp</th> 
                 </tr>
             </thead>
             <tbody>
@@ -35,11 +35,11 @@
         <li><a href="#" host="${host}/${sid}" class="dbLink">${sid}@${host}</a></li>
     </script> 
     <script id = "tmplDbSchema" type="text/x-jquery-tmpl">
-                            <tr class="dbSchema">
-                            <td>${name}</td>
-                            <td>${size}GB</td>
-                            <td>${connection_count}</td>
-                            <td class="right"><a class="btn danger">Drop</a></td>
+                            <tr class="{{if connection_count > 0 && connection_count <= 3 }}schemaFree {{/if}}{{if connection_count > 3 }}schemaUsed {{/if}}dbSchema">
+                            <td >${name}</td>
+                            <td >${size}GB</td>
+                            <td >${connection_count}</td>
+                            <td class="right">{{if connection_count < 1 }}<a class="btn danger">Drop</a>{{/if}}</td>
                             </tr>
     </script> 
     <script type="text/javascript">
@@ -53,10 +53,9 @@
            loadDatabaseListCB([{sid:"SID", host : "mox00.se-b.ru"}, {sid:"SID2", host : "mox02.se-b.ru"}]);
            loadSchemasCB([{name:"scheme1", size:"50", connection_count:"123"}]);
            item = $('.tmplDbListItem[host="mox00.se-b.ru/SID"]');
-           $('#tmplDbSchema').tmpl({name:"scheme1", size:"50", connection_count:"123"}).appendTo(table);   
-           $('#tmplDbSchema').tmpl({name:"scheme1", size:"50", connection_count:"123"}).appendTo(table);   
-           $('#tmplDbSchema').tmpl({name:"scheme1", size:"50", connection_count:"123"}).appendTo(table);   
-           $('#tmplDbSchema').tmpl({name:"scheme1", size:"50", connection_count:"123"}).appendTo(table);   
+           $('#tmplDbSchema').tmpl({name:"scheme1", size:"50", connection_count:40}).appendTo(table);   
+           $('#tmplDbSchema').tmpl({name:"scheme1", size:"50", connection_count:0}).appendTo(table);   
+           $('#tmplDbSchema').tmpl({name:"scheme1", size:"50", connection_count:1}).appendTo(table);   
          });
         
         
@@ -70,17 +69,6 @@
             }
             $('.dbLink').click(clickDb);
 			$('.dbLink').first().click();
-            
-            // $('.dbHide').click(function(e) {
-                // link = $(e.target);
-                // if( link.text() == "+" ) {
-                    // link.parents('.dbItem').children('.schemesList').show();
-                    // link.text("-")
-                // } else {
-                    // link.parents('.dbItem').children('..schemesList').hide();
-                    // link.text("+")
-                // }
-            // });
         }
         
         function clickDb(e) {
