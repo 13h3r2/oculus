@@ -12,10 +12,16 @@ class DatabaseInfoHandler:
     def handle(self, path):
         if path.startswith('/'):
             request = path.split("/")
-            if len(request) == 3:
+            if len(request) >= 3:
                 dbInfo = self.storage.getDbInfo(request[1], request[2])
-                if dbInfo: 
-                    return dbInfo.gather()
+                if dbInfo:
+                    if len(request) == 3:                                          
+                        #info/mox04.sibirenergo-billing.ru/qaasr
+                        return dbInfo.gather()
+                    if len(request) == 5:
+                        #info/mox04.sibirenergo-billing.ru/qaasr/drop/dev_romanchuk
+                        return dbInfo.drop();
+                        
                  
         return None
 
@@ -57,11 +63,14 @@ class Handler(BaseHTTPRequestHandler):
         
         result = None
         if t.startswith("/api/"):
-            api_call = t[5:]
-            self.logger.warn("api call " + api_call)
-            for walker in self.handlers.keys():
-                if(api_call.startswith(walker)):
-                    result = self.handlers[walker].handle(api_call[len(walker):])
+            try:
+                api_call = t[5:]
+                self.logger.warn("api call " + api_call)
+                for walker in self.handlers.keys():
+                    if(api_call.startswith(walker)):
+                        result = self.handlers[walker].handle(api_call[len(walker):])
+            except Exception as ex:
+                self.send_response(500, ex)
             
             
         if result: 

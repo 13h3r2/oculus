@@ -1,6 +1,7 @@
 import time
 import pickle
 import cx_Oracle
+import sys
 
 stubmode = 0
 
@@ -58,8 +59,12 @@ class DatabaseInfo(object):
             cursor.close()
             connection.close()
         return self.schemes
-        
-        
+    
+    def drop(self):
+      connection = cx_Oracle.connect(self.sys_login, self.sys_password, cx_Oracle.makedsn(self.host, 1521, self.sid), cx_Oracle.SYSDBA)        
+      cursor = connection.cursor()
+      cursor.execute("select 1 / 0 from dual")
+      
 class SchemeInfo:
     
     def __init__(self, name, size, connection_count):
@@ -67,3 +72,4 @@ class SchemeInfo:
         self.size = size
         self.connection_count = connection_count
         
+ 

@@ -39,7 +39,7 @@
                             <td >${name}</td>
                             <td >${size}GB</td>
                             <td >${connection_count}</td>
-                            <td class="right">{{if connection_count < 1 }}<a class="btn danger">Drop</a>{{/if}}</td>
+                            <td class="right">{{if connection_count < 1 }}<a class="btn danger schemaDrop">Drop</a>{{/if}}</td>
                             </tr>
     </script> 
     <script type="text/javascript">
@@ -68,7 +68,7 @@
                 $('#tmplDbListItem').tmpl(json[i]).appendTo(list);                 
             }
             $('.dbLink').click(clickDb);
-			$('.dbLink').first().click();
+			      $('.dbLink').first().click();
         }
         
         function clickDb(e) {
@@ -89,8 +89,8 @@
         function loadSchemas() {
         	$(".dbLoading").show();
 
-			//clear existing schemas
-			$(".dbSchema").remove();
+    			//clear existing schemas
+    			$(".dbSchema").remove();
         		
         	//get schema info
         	link = $("#dbList").children(".active").children("a");
@@ -106,10 +106,24 @@
 	        //fill schemas
 	        table = dbItem.find("table").find("tbody");
 	        for(i in json) {
-                $('#tmplDbSchema').tmpl(json[i]).appendTo(table);   
-            }
-            
-            $(".dbLoading").hide();
+            $('#tmplDbSchema').tmpl(json[i]).appendTo(table);   
+          }
+          $(".schemaDrop").click(dropSchema)
+          $(".dbLoading").hide();
+        }
+        
+        function dropSchema(button) {
+          var b = $(button.target);
+          var schema = b.parents("tr").children("td:first-child").text();
+          var dbHost = $("#dbList").children(".active").children("a").attr("host");
+          var requestUrl = "/api/database/info/" + dbHost + "/drop/" + schema; 
+          console.log("get " + requestUrl);
+          $.get(requestUrl, dropSchemaCB);          
+        }
+        
+        function dropSchemaCB(json) {
+          console.log("got");
+          console.log(json);
         }
 	</script>
 <br/>
