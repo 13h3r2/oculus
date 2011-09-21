@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler
-from oculus.Database import DatabaseStorage, DatabaseInfo, SchemeInfo
+from oculus.Database import DatabaseStorage, DatabaseInfo, SchemeInfo,\
+    TablespaceInfo
 import json
 import logging
 import os
@@ -15,11 +16,15 @@ class DatabaseInfoHandler:
             if len(request) >= 3:
                 dbInfo = self.storage.getDbInfo(request[1], request[2])
                 if dbInfo:
-                    if len(request) == 3:                                          
-                        #info/mox04.sibirenergo-billing.ru/qaasr
-                        return dbInfo.gather()
-                    if len(request) == 5:
-                        #info/mox04.sibirenergo-billing.ru/qaasr/drop/dev_romanchuk
+                    if len(request) == 4:                                          
+                        #info/mox04.sibirenergo-billing.ru/qaasr/schema
+                        if request[3] == 'schema':
+                            return dbInfo.gatherSchemas()
+                        #info/mox04.sibirenergo-billing.ru/qaasr/tablespace
+                        if request[3] == 'tablespace':
+                            return dbInfo.gatherTablespaces()
+                    if len(request) == 6:
+                        #info/mox04.sibirenergo-billing.ru/qaasr/schema/drop/dev_romanchuk
                         return dbInfo.drop();
                         
                  
@@ -30,6 +35,8 @@ class APIEncoder(json.JSONEncoder):
         if isinstance(obj, DatabaseInfo):
             return obj.__dict__
         if isinstance(obj, SchemeInfo):
+            return obj.__dict__
+        if isinstance(obj, TablespaceInfo):
             return obj.__dict__
         raise TypeError
 

@@ -34,7 +34,7 @@ class DatabaseInfo(object):
         self.sys_login = sys_login
         self.sys_password = sys_password
         
-    def gather(self):
+    def gatherSchemas(self):
         if stubmode == 1:
             time.sleep(1);
             self.schemes = [
@@ -60,10 +60,36 @@ class DatabaseInfo(object):
             connection.close()
         return self.schemes
     
+    def gatherTablespaces(self):
+        if stubmode == 1:
+            time.sleep(1);
+            self.schemes = [
+                TablespaceInfo('ФВА', 1, 4),
+                TablespaceInfo('ААА', 44, 6 ),
+                TablespaceInfo('Е1', 12312, 0),
+            ]
+        else: 
+            connection = cx_Oracle.connect(self.sys_login, self.sys_password, cx_Oracle.makedsn(self.host, 1521, self.sid), cx_Oracle.SYSDBA)        
+            cursor = connection.cursor()
+            cursor.execute('''
+            select f.tablespace_name as name, trunc(sum(u.bytes)/1024/1024, 0) total, trunc(sum(f.bytes)/1024/1024,0) free
+from  ( select tablespace_name , sum(bytes) as bytes from sys.dba_free_space group by tablespace_name)  f
+inner join ( select tablespace_name , sum(bytes) as bytes from sys.dba_data_files group by tablespace_name) u on u.tablespace_name = f.tablespace_name
+where f.tablespace_name = 'ASR_DATA'
+group by f.tablespace_name
+            ''')
+            self.schemes = []
+            for record in cursor.fetchall():
+                self.schemes.append(TablespaceInfo(record[0], record[1], record[2]))
+            cursor.close()
+            connection.close()
+        return self.schemes
+    
     def drop(self):
       connection = cx_Oracle.connect(self.sys_login, self.sys_password, cx_Oracle.makedsn(self.host, 1521, self.sid), cx_Oracle.SYSDBA)        
       cursor = connection.cursor()
       cursor.execute("select 1 / 0 from dual")
+     
       
 class SchemeInfo:
     
@@ -71,5 +97,11 @@ class SchemeInfo:
         self.name = name
         self.size = size
         self.connection_count = connection_count
+        
+class TablespaceInfo:
+    def __init__(self, name, totalSpace, freeSpace):
+        self.name = name
+        self.freeSpace = freeSpace
+        self.totalSpace = totalSpace
         
  
