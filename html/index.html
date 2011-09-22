@@ -10,11 +10,11 @@
     <script id = "tmplDBItem" type="text/x-jquery-tmpl">      
         <div class="row">
             <div class="span12 columns">
-                <h3>Schemes</h3>    
+                <h3>Tablespaces</h3>    
             </div>
             <div class="span4 columns right">
-                <a href="#" class="btn" id="dbSchemaRefresh">refresh</a>  
-                <a href="#" class="btn dbHide">-</a>
+                <a href="#" class="btn" id="tablespaceRefresh">refresh</a>  
+                <a href="#" class="btn" id="tableSpaceHide">-</a>
             </div>
         </div>
         <table class="tablespaces">
@@ -27,27 +27,37 @@
                 </tr>
             </thead>
             <tbody>
-            	<tr class="dbLoading"><td colspan="4" class="center">Loading <img src="loading_icon.gif" /></td></tr>
+            	<tr class="loading"><td colspan="4" class="center">Loading <img src="loading_icon.gif" /></td></tr>
             </tbody>
         </table>
-        <table class="schemesList">
+        <br/>
+        <div class="row">
+            <div class="span12 columns">
+                <h3>Schemes</h3>    
+            </div>
+            <div class="span4 columns right">
+                <a href="#" class="btn" id="dbSchemaRefresh">refresh</a>  
+                <a href="#" class="btn dbHide">-</a>
+            </div>
+        </div>
+        <table class="schemes">
             <thead>
                 <tr>
-                    <th width="50%">Name</th>
-                    <th width="10%">Size</th>
-                    <th width="10%">Connections</th> 
-                    <th width="30%">&nbsp</th> 
+                    <th width="40%">Name</th>
+                    <th width="20%">Size</th>
+                    <th width="20%">Connections</th> 
+                    <th width="20%">&nbsp</th> 
                 </tr>
             </thead>
             <tbody>
-            	<tr class="dbLoading"><td colspan="4" class="center">Loading <img src="loading_icon.gif" /></td></tr>
+            	<tr class="loading"><td colspan="4" class="center">Loading <img src="loading_icon.gif" /></td></tr>
             </tbody>
         </table>
     </script> 
-    <script id = "tmplDbListItem" type="text/x-jquery-tmpl">
+    <script id = "tmplDBTabItem" type="text/x-jquery-tmpl">
         <li><a href="#" host="${host}/${sid}" class="dbLink">${sid}@${host}</a></li>
     </script> 
-    <script id = "tmplDbSchema" type="text/x-jquery-tmpl">
+    <script id = "tmplSchema" type="text/x-jquery-tmpl">
                             <tr class="{{if connection_count > 0 && connection_count <= 3 }}schemaFree {{/if}}{{if connection_count > 3 }}schemaUsed {{/if}}dbSchema">
                             <td >${name}</td>
                             <td >${size}GB</td>
@@ -55,12 +65,12 @@
                             <td class="right">{{if connection_count < 1 }}<a class="btn danger schemaDrop">Drop</a>{{/if}}</td>
                             </tr>
     </script> 
-    <script id = "tmplDbTablespace" type="text/x-jquery-tmpl">
-                            <tr>
+    <script id = "tmplTablespace" type="text/x-jquery-tmpl">
+                            <tr class="tablespace">
                             <td >${name}</td>
                             <td >${freeSpace}GB</td>
                             <td >${totalSpace}GB</td>
-                            <td >***</td>
+                            <td >${percent}</td>
                             </tr>
     </script> 
     <script type="text/javascript">
@@ -73,12 +83,15 @@
            table = $("#db");
            loadDatabaseListCB([{sid:"SID", host : "mox00.se-b.ru"}, {sid:"SID2", host : "mox02.se-b.ru"}]);
            loadSchemasCB([{name:"scheme1", size:"50", connection_count:"123"}]);
-           loadTemplatesCB([{name:"scheme1", size:"50", connection_count:"123"}]);
-           item = $('.tmplDbListItem[host="mox00.se-b.ru/SID"]');
-           $('#tmplDbSchema').tmpl({name:"scheme1", size:"50", connection_count:40}).appendTo(table);   
-           $('#tmplDbSchema').tmpl({name:"scheme1", size:"50", connection_count:0}).appendTo(table);   
-           $('#tmplDbSchema').tmpl({name:"scheme1", size:"50", connection_count:1}).appendTo(table);   
-           $('#tmplDbTablespace').tmpl({name:"scheme1", freeSpace:103, totalSpace:154}).appendTo(table);   
+           loadSchemasCB([{name:"scheme2", size:"40", connection_count:"0"}]);
+           loadSchemasCB([{name:"scheme3", size:"20", connection_count:"1"}]);
+           loadTablespacesCB([{name:"ASRDATA", freeSpace:103, totalSpace:154}]);
+           
+           item = $('.tmplDBTabItem[host="mox00.se-b.ru/SID"]');
+           //$('#tmplSchema').tmpl({name:"scheme1", size:"50", connection_count:40}).appendTo($('.schemes').find('tbody'));   
+           //$('#tmplSchema').tmpl({name:"scheme2", size:"50", connection_count:0}).appendTo(item);   
+           //$('#tmplSchema').tmpl({name:"scheme3", size:"50", connection_count:1}).appendTo(item);   
+           //$('#tmplTablespace').tmpl({name:"ASRDATA", freeSpace:103, totalSpace:154}).appendTo(table);   
          });
         
         
@@ -88,13 +101,13 @@
             list = $('#dbList');
             list.children().remove();
             for(i in json) {
-                $('#tmplDbListItem').tmpl(json[i]).appendTo(list);                 
+                $('#tmplDBTabItem').tmpl(json[i]).appendTo(list);                 
             }
-            $('.dbLink').click(clickDb);
-			      $('.dbLink').first().click();
+            $('.dbLink').click(clickDbTab);
+			$('.dbLink').first().click();
         }
         
-        function clickDb(e) {
+        function clickDbTab(e) {
         	link = $(e.target);
         	if( !link.parent().hasClass("active") ) {
 	        	link.parent().parent().children().removeClass("active");
@@ -105,15 +118,15 @@
 	        	$("#dbSchemaRefresh").click(loadSchemas);
 	        	
 	        	loadSchemas();
-
+	        	loadTablespaces();
         	}
         }
         
         function loadSchemas() {
-        	$(".schemesList").find(".dbLoading").show();
+        	$(".schemes").find(".loading").show();
 
-    			//clear existing schemas
-    			$(".dbSchema").remove();
+			//clear existing schemas
+			$(".dbSchema").remove();
         		
         	//get schema info
         	link = $("#dbList").children(".active").children("a");
@@ -127,24 +140,37 @@
         	console.log(json);
         	dbItem = $("#dbItem");
 	        //fill schemas
-	        table = dbItem.find("table.schemesList").find("tbody");
+	        table = dbItem.find("table.schemes").find("tbody");
 	        for(i in json) {
-            $('#tmplDbSchema').tmpl(json[i]).appendTo(table);   
+            $('#tmplSchema').tmpl(json[i]).appendTo(table);   
           }
           $(".schemaDrop").click(dropSchema)
-          $(".schemesList").find(".dbLoading").hide();
+          $(".schemes").find(".loading").hide();
         }
         
-        function loadTemplateCB(json) {
+        function loadTablespaces() {
+            $(".tablespaces").find(".loading").show();
+
+            //clear existing schemas
+            $(".tablespace").remove();
+                
+            //get schema info
+            link = $("#dbList").children(".active").children("a");
+            var requestUrl = "/api/database/info/" + link.attr("host") + "/tablespace";
+            console.log("get " + requestUrl);
+            $.get(requestUrl, loadTablespacesCB);
+        }
+        
+        function loadTablespacesCB(json) {
         	console.log("got");
         	console.log(json);
         	dbItem = $("#dbItem");
 	        //fill schemas
 	        table = dbItem.find("table.tablespaces").find("tbody");
 	        for(i in json) {
-            $('#tmplDbTablespace').tmpl(json[i]).appendTo(table);   
+            $('#tmplTablespace').tmpl(json[i]).appendTo(table);   
           }
-          $(".tablespaces").find(".dbLoading").hide();
+          $(".tablespaces").find(".loading").hide();
         }
         
         function dropSchema(button) {

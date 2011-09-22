@@ -72,7 +72,7 @@ class DatabaseInfo(object):
             connection = cx_Oracle.connect(self.sys_login, self.sys_password, cx_Oracle.makedsn(self.host, 1521, self.sid), cx_Oracle.SYSDBA)        
             cursor = connection.cursor()
             cursor.execute('''
-            select f.tablespace_name as name, trunc(sum(u.bytes)/1024/1024, 0) total, trunc(sum(f.bytes)/1024/1024,0) free
+            select f.tablespace_name as name, trunc(sum(u.bytes)/1024/1024/1024, 0) total, trunc(sum(f.bytes)/1024/1024/1024,0) as free 
 from  ( select tablespace_name , sum(bytes) as bytes from sys.dba_free_space group by tablespace_name)  f
 inner join ( select tablespace_name , sum(bytes) as bytes from sys.dba_data_files group by tablespace_name) u on u.tablespace_name = f.tablespace_name
 where f.tablespace_name = 'ASR_DATA'
@@ -103,5 +103,7 @@ class TablespaceInfo:
         self.name = name
         self.freeSpace = freeSpace
         self.totalSpace = totalSpace
+        self.percent = round(100 * (totalSpace - freeSpace) / totalSpace, 2)
+        
         
  
