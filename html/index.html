@@ -1,20 +1,21 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="main.css" />
-<link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap-1.1.0.min.css">
+<link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css">
 </head>
 <body>
 
     <script src="jquery-1.6.2.js"></script>
     <script src="jquery.tmpl.js"></script>   
     <script id = "tmplDBItem" type="text/x-jquery-tmpl">      
+        <form>
         <div class="row">
             <div class="span12 columns">
                 <h3>Tablespaces</h3>    
             </div>
             <div class="span4 columns right">
-                <a href="#" class="btn" id="tablespaceRefresh">refresh</a>  
-                <a href="#" class="btn" id="tableSpaceHide">-</a>
+                <a href="#" class="btn refresh">R</a>  
+                <a href="#" class="btn hideShow" >-</a>
             </div>
         </div>
         <table class="tablespaces">
@@ -23,7 +24,7 @@
                     <th width="40%">Name</th>
                     <th width="20%">Free</th>
                     <th width="20%">Total</th> 
-                    <th width="20%">Percent</th> 
+                    <th width="20%">Used</th> 
                 </tr>
             </thead>
             <tbody>
@@ -33,11 +34,41 @@
         <br/>
         <div class="row">
             <div class="span12 columns">
+                <h3>Dumps</h3>    
+            </div>
+            <div class="span4 columns right">
+                <a href="#" class="btn refresh" id="dumpsRefresh">R</a>  
+                <a href="#" class="btn hideShow">-</a>
+            </div>
+        </div>
+        <table class="dumps">
+            <thead>
+                <tr>
+                    <th width="5%">&nbsp</th>
+                    <th width="95%">Name</th>
+                </tr>
+            </thead>
+            <tbody>
+            	<tr class="loading"><td colspan="4" class="center">Loading <img src="loading_icon.gif" /></td></tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="span4" class="right input clearfix" >
+                <input name="dumpDBName" class="span4" type="text">
+            </div>
+            <div class="span8" >&nbsp</div>
+            <div class="span4 right" >
+                <a class="btn" id="dumpInstall">Install</a>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="span12 columns">
                 <h3>Schemes</h3>    
             </div>
             <div class="span4 columns right">
-                <a href="#" class="btn" id="dbSchemaRefresh">refresh</a>  
-                <a href="#" class="btn dbHide">-</a>
+                <a href="#" class="btn refresh">R</a>  
+                <a href="#" class="btn hideShow">-</a>
             </div>
         </div>
         <table class="schemes">
@@ -53,6 +84,7 @@
             	<tr class="loading"><td colspan="4" class="center">Loading <img src="loading_icon.gif" /></td></tr>
             </tbody>
         </table>
+        </form>
     </script> 
     <script id = "tmplDBTabItem" type="text/x-jquery-tmpl">
         <li><a href="#" host="${host}/${sid}" class="dbLink">${sid}@${host}</a></li>
@@ -70,7 +102,13 @@
                             <td >${name}</td>
                             <td >${freeSpace}GB</td>
                             <td >${totalSpace}GB</td>
-                            <td >${percent}</td>
+                            <td >${percent}%</td>
+                            </tr>
+    </script> 
+    <script id = "tmplDump" type="text/x-jquery-tmpl">
+                            <tr class="dump">
+                            <td ><input class="dumpRadio" type="radio" name ="dumps" value="${name}"/></td>
+                            <td >${name}</td>
                             </tr>
     </script> 
     <script type="text/javascript">
@@ -86,12 +124,9 @@
            loadSchemasCB([{name:"scheme2", size:"40", connection_count:"0"}]);
            loadSchemasCB([{name:"scheme3", size:"20", connection_count:"1"}]);
            loadTablespacesCB([{name:"ASRDATA", freeSpace:103, totalSpace:154}]);
+           loadDumpsCB([{name:"proasr-123871897239481289.dmp"}]);
            
            item = $('.tmplDBTabItem[host="mox00.se-b.ru/SID"]');
-           //$('#tmplSchema').tmpl({name:"scheme1", size:"50", connection_count:40}).appendTo($('.schemes').find('tbody'));   
-           //$('#tmplSchema').tmpl({name:"scheme2", size:"50", connection_count:0}).appendTo(item);   
-           //$('#tmplSchema').tmpl({name:"scheme3", size:"50", connection_count:1}).appendTo(item);   
-           //$('#tmplTablespace').tmpl({name:"ASRDATA", freeSpace:103, totalSpace:154}).appendTo(table);   
          });
         
         
@@ -105,6 +140,8 @@
             }
             $('.dbLink').click(clickDbTab);
 			$('.dbLink').first().click();
+			
+			$('.hideShow').click(hideShow);
         }
         
         function clickDbTab(e) {
@@ -119,6 +156,7 @@
 	        	
 	        	loadSchemas();
 	        	loadTablespaces();
+	        	loadDumps();
         	}
         }
         
@@ -142,10 +180,10 @@
 	        //fill schemas
 	        table = dbItem.find("table.schemes").find("tbody");
 	        for(i in json) {
-            $('#tmplSchema').tmpl(json[i]).appendTo(table);   
-          }
-          $(".schemaDrop").click(dropSchema)
-          $(".schemes").find(".loading").hide();
+              $('#tmplSchema').tmpl(json[i]).appendTo(table);   
+            }
+            $(".schemaDrop").click(dropSchema)
+            $(".schemes").find(".loading").hide();
         }
         
         function loadTablespaces() {
@@ -168,9 +206,36 @@
 	        //fill schemas
 	        table = dbItem.find("table.tablespaces").find("tbody");
 	        for(i in json) {
-            $('#tmplTablespace').tmpl(json[i]).appendTo(table);   
-          }
-          $(".tablespaces").find(".loading").hide();
+	          $('#tmplTablespace').tmpl(json[i]).appendTo(table);   
+            }
+            $(".tablespaces").find(".loading").hide();
+            
+        }
+        
+        function loadDumps() {
+            $(".dumps").find(".loading").show();
+
+            //clear existing schemas
+            $(".dump").remove();
+                
+            //get schema info
+            link = $("#dbList").children(".active").children("a");
+            var requestUrl = "/api/database/info/" + link.attr("host") + "/dump";
+            console.log("get " + requestUrl);
+            $.get(requestUrl, loadDumpsCB);
+        }
+        
+        function loadDumpsCB(json) {
+        	console.log("got");
+        	console.log(json);
+        	dbItem = $("#dbItem");
+	        //fill schemas
+	        table = dbItem.find("table.dumps").find("tbody");
+	        for(i in json) {
+	            $('#tmplDump').tmpl(json[i]).appendTo(table);   
+            }
+            $(".dumps").find(".loading").hide();
+            table.find(".dumpRadio").first().attr("checked", "checked");
         }
         
         function dropSchema(button) {
@@ -186,6 +251,20 @@
           console.log("got");
           console.log(json);
         }
+        
+        function hideShow(button) {
+        	var b = $(button.target);
+        	if( b.text() == '-') {
+        		b.parent().children('.refresh').hide();
+        	    b.parents(".row").next().hide();        		
+        	    b.text('+');        		
+        	}
+        	else {
+        	    b.parents(".row").next().show();
+        		b.parent().children('.refresh').show();
+        	    b.text('-');        		
+        	}
+        }
 	</script>
 <br/>
 <br/>
@@ -196,7 +275,7 @@
                 <h1>Databases</h1>    
             </div>
             <div class="span4 columns right">
-                <a href="#" id="reloadDBList" class="btn">Reload server list</a>
+                <a href="#" id="reloadDBList" class="btn">R</a>
             </div>
         </div>    
         <ul class = "tabs" id="dbList">

@@ -1,6 +1,6 @@
 from http.server import BaseHTTPRequestHandler
 from oculus.Database import DatabaseStorage, DatabaseInfo, SchemeInfo,\
-    TablespaceInfo
+    TablespaceInfo, DumpInfo
 import json
 import logging
 import os
@@ -20,6 +20,9 @@ class DatabaseInfoHandler:
                         #info/mox04.sibirenergo-billing.ru/qaasr/schema
                         if request[3] == 'schema':
                             return dbInfo.gatherSchemas()
+                        #info/mox04.sibirenergo-billing.ru/qaasr/dump
+                        if request[3] == 'dump':
+                            return dbInfo.gatherDumps()
                         #info/mox04.sibirenergo-billing.ru/qaasr/tablespace
                         if request[3] == 'tablespace':
                             return dbInfo.gatherTablespaces()
@@ -37,6 +40,8 @@ class APIEncoder(json.JSONEncoder):
         if isinstance(obj, SchemeInfo):
             return obj.__dict__
         if isinstance(obj, TablespaceInfo):
+            return obj.__dict__
+        if isinstance(obj, DumpInfo):
             return obj.__dict__
         raise TypeError
 
@@ -65,7 +70,6 @@ class Handler(BaseHTTPRequestHandler):
             self.send_response(403)
             return
         
-        t = ""
         t = self.path;
         
         result = None

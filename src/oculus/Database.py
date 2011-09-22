@@ -1,7 +1,8 @@
 import time
 import pickle
 import cx_Oracle
-import sys
+from string import Template
+import os
 
 stubmode = 0
 
@@ -9,8 +10,8 @@ class DatabaseStorage:
     def __init__(self):
         if stubmode == 1:
             self.databases = [
-                DatabaseInfo("mox04.sibirenergo-billing.ru", "qaasr", "SYS", "*"),
-                DatabaseInfo("mox05.sibirenergo-billing.ru", "prodasr", "SYS", "*"),
+                DatabaseInfo("mox04.sibirenergo-billing.ru", "qaasr", "SYS", "*", "ssh", "p"),
+                DatabaseInfo("mox05.sibirenergo-billing.ru", "prodasr", "SYS", "*", "ssh", "p"),
             ]
         else:
             f = open("oculus/databases.pickle", 'rb+');
@@ -26,13 +27,21 @@ class DatabaseStorage:
                 return db
         return None
 
+class DumpStorage:
+    def __init__(self, path = None, pattern = None):
+        self.path = path
+        self.pattern = pattern 
+
 class DatabaseInfo(object):
 
-    def __init__(self, host, sid, sys_login, sys_password):
+    def __init__(self, host, sid, sys_login, sys_password, ssh_login, ssh_password, dump_dir):
         self.host = host
         self.sid = sid
         self.sys_login = sys_login
         self.sys_password = sys_password
+        self.ssh_login = ssh_login        
+        self.ssh_password = ssh_password        
+        self.dump_dir = dump_dir        
         
     def gatherSchemas(self):
         if stubmode == 1:
@@ -86,10 +95,21 @@ group by f.tablespace_name
         return self.schemes
     
     def drop(self):
-      connection = cx_Oracle.connect(self.sys_login, self.sys_password, cx_Oracle.makedsn(self.host, 1521, self.sid), cx_Oracle.SYSDBA)        
-      cursor = connection.cursor()
-      cursor.execute("select 1 / 0 from dual")
+        connection = cx_Oracle.connect(self.sys_login, self.sys_password, cx_Oracle.makedsn(self.host, 1521, self.sid), cx_Oracle.SYSDBA)        
+        cursor = connection.cursor()
+        cursor.execute("select 1 / 0 from dual")
      
+    def gatherDumps(self):
+        result = [];
+        cmd =  Template("ssh $ssh_login@$host 'cd $dump_dir && ls -1 *.dmp'").substitute(self.__dict__)
+        f = os.popen(cmd)
+        for s in f.readlines():
+            result.append(DumpInfo(s.strip()))
+        f.close()
+        return result
+     
+    def __repr__(self):
+        return self.__dict__.__repr__(); 
       
 class SchemeInfo:
     
@@ -106,4 +126,6 @@ class TablespaceInfo:
         self.percent = round(100 * (totalSpace - freeSpace) / totalSpace, 2)
         
         
- 
+class DumpInfo:
+    def __init__(self, name):
+        self.name = name
