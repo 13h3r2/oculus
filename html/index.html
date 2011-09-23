@@ -53,14 +53,20 @@
             </tbody>
         </table>
         <div class="row">
-            <div class="span4" class="right input clearfix" >
-                <input name="dumpDBName" class="span4" type="text">
-            </div>
-            <div class="span8" >&nbsp</div>
-            <div class="span4 right" >
-                <a class="btn" id="dumpInstall">Install</a>
+            <div class="clearfix span16" >
+                    <div class="clearfix" id="cDumpName">
+                    <label for="schemaName">Scheme name</label>
+                    <div class="input">
+                        <input class="error" id="schemaName" name="schemaName" size="30" type="text">
+                        <!--<span class="help-inline">scheme name to dump installation</span>-->
+                        <a class="btn" id="dumpInstall">Install</a>
+                    </div>
+                    </div>
             </div>
         </div>
+
+        <br/>
+        <br/>
         <br/>
         <div class="row">
             <div class="span12 columns">
@@ -142,6 +148,26 @@
 			$('.dbLink').first().click();
 			
 			$('.hideShow').click(hideShow);
+			$('#dumpInstall').click(dumpInstall);
+        }
+        
+        function dumpInstall() {
+        	var schemaName = $('#schemaName').val();
+        	if( schemaName == null || schemaName == '' ) {
+        		$('#cDumpName').addClass('error');
+        	} else {
+        		$('#cDumpName').removeClass('error');
+        		var link = $("#dbList").children(".active").children("a");
+        		var dump = $(".dumpRadio:checked").val();
+                var requestUrl = "/api/database/info/" + link.attr("host") + "/dump/install/" + dump + "/" + schemaName;
+                console.log( "get" + requestUrl );
+                $.get(requestUrl, function(json){
+                	console.log("got");
+                	console.log(json);
+                    
+                });
+        	}
+        	
         }
         
         function clickDbTab(e) {
@@ -283,7 +309,6 @@
         <div class="container" id="dbItem">
         </div>
     </div>
-    
 </div>
 </body>
 </html>

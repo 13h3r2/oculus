@@ -5,6 +5,7 @@ from string import Template
 import os
 
 stubmode = 0
+stubactions = 1
 
 class DatabaseStorage:
     def __init__(self):
@@ -58,8 +59,7 @@ class DatabaseInfo(object):
     select owner, ''||trunc(sum(bytes)/1024/1024/1024, 1), nvl(c_count, 0)
     from dba_segments dbs
     left outer join ( select count(*) as c_count, s.username as username from v$session s group by s.username) s on s.username = dbs.owner
-    group by owner, c_count
-    having sum(bytes) > 5000000000
+    group by owner, c_count    
     order by sum(bytes) desc
             ''')
             self.schemes = []
@@ -94,10 +94,13 @@ group by f.tablespace_name
             connection.close()
         return self.schemes
     
-    def drop(self):
+    def drop(self, schema):
+        if stubactions != 0:
+            time.sleep(1)
+            return "0"
         connection = cx_Oracle.connect(self.sys_login, self.sys_password, cx_Oracle.makedsn(self.host, 1521, self.sid), cx_Oracle.SYSDBA)        
         cursor = connection.cursor()
-        cursor.execute("select 1 / 0 from dual")
+        cursor.execute("drop user " + schema + " cascade")
      
     def gatherDumps(self):
         result = [];
@@ -107,6 +110,18 @@ group by f.tablespace_name
             result.append(DumpInfo(s.strip()))
         f.close()
         return result
+    
+    def installDump(self, dumpName, schema):
+        if stubactions != 0:
+            time.sleep(1)
+            return "0"
+        params = {}
+        params.update(self.__dict__)
+        params.update( { 'dumpName' : dumpName, 'schema': schema })
+        cmd =  Template("ssh $ssh_login@$host '/u01/app/oracle/admin/scripts/create_test_schema/create_asr_schema.sh $sid $schema B_ASR_NEW $dumpName'").substitute(params)
+        f = os.popen(cmd)
+        return os.WEXITSTATUS(f.close())
+        
      
     def __repr__(self):
         return self.__dict__.__repr__(); 

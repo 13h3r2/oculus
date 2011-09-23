@@ -28,7 +28,12 @@ class DatabaseInfoHandler:
                             return dbInfo.gatherTablespaces()
                     if len(request) == 6:
                         #info/mox04.sibirenergo-billing.ru/qaasr/schema/drop/dev_romanchuk
-                        return dbInfo.drop();
+                        if request[3] == 'schema' :
+                            return dbInfo.drop();
+                    if len(request) == 7:
+                        #info/mox04.sibirenergo-billing.ru/qaasr/dump/install/dump-name.dmp/schemaname
+                        if request[4] == 'install' and request[3] == 'dump':
+                            return dbInfo.installDump(request[5], request[6])
                         
                  
         return None
@@ -81,6 +86,7 @@ class Handler(BaseHTTPRequestHandler):
                     if(api_call.startswith(walker)):
                         result = self.handlers[walker].handle(api_call[len(walker):])
             except Exception as ex:
+                print(ex)
                 self.send_response(500, ex)
             
             
