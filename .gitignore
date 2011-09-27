@@ -3,3 +3,7 @@ src/oculus/databases.pickle
 .pydevproject
 *.pyc
 .pydevproject
+bin
+target
+.settings
+
