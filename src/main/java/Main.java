@@ -5,7 +5,7 @@ import com.sun.grizzly.http.servlet.ServletAdapter;
 import com.sun.grizzly.tcp.http11.GrizzlyAdapter;
 import com.sun.grizzly.tcp.http11.GrizzlyRequest;
 import com.sun.grizzly.tcp.http11.GrizzlyResponse;
-import com.sun.jersey.spi.container.servlet.ServletContainer;
+import com.sun.jersey.spi.spring.container.servlet.SpringServlet;
 
 public class Main {
 
@@ -14,10 +14,12 @@ public class Main {
 
         // Jersey web resources
         ServletAdapter jerseyAdapter = new ServletAdapter();
-        jerseyAdapter.addInitParameter("com.sun.jersey.config.property.packages", "ru.oculus");
         jerseyAdapter.setContextPath("/api");
+        jerseyAdapter.addInitParameter("com.sun.jersey.config.property.packages", "ru.oculus");
         jerseyAdapter.addContextParameter("com.sun.jersey.api.json.POJOMappingFeature", "true");
-        jerseyAdapter.setServletInstance(new ServletContainer());
+        jerseyAdapter.addContextParameter("contextConfigLocation", "classpath:spring-config.xml");
+        jerseyAdapter.addServletListener("org.springframework.web.context.ContextLoaderListener");
+        jerseyAdapter.setServletInstance(new SpringServlet());
 
         ws.addGrizzlyAdapter(jerseyAdapter, new String[] { "/api" });
         GrizzlyAdapter staticAdapter = new GrizzlyAdapter("src/main/webapp") {

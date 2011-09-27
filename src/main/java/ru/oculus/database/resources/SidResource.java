@@ -13,20 +13,23 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ru.oculus.database.model.Sid;
-import ru.oculus.database.service.SidStorageProvider;
+import com.sun.jersey.spi.resource.Singleton;
 
+import ru.oculus.database.model.Sid;
+import ru.oculus.database.service.SidService;
+
+@Singleton
 @Path("/database")
 @Produces(MediaType.APPLICATION_JSON)
 public class SidResource {
 
     @Autowired
-    private SidStorageProvider sidStorageProvider;
+    private SidService sidStorageProvider;
 
     @GET
     public JSONArray getSIDList() throws JSONException, JAXBException, IOException {
         JSONArray result = new JSONArray();
-        for( Sid s : sidStorageProvider.getStorage().getSids() ) {
+        for (Sid s : sidStorageProvider.getStorage().getSids()) {
             JSONObject obj = new JSONObject();
             obj.put("host", s.getHost());
             obj.put("sid", s.getSid());
@@ -34,7 +37,5 @@ public class SidResource {
         }
         return result;
     }
-
-
 
 }
