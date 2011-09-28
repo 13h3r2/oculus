@@ -7,7 +7,7 @@
 
     <script src="jquery-1.6.2.js"></script>
     <script src="jquery.tmpl.js"></script>   
-    <script id = "tmplDBItem" type="text/x-jquery-tmpl">      
+    <script id = "tmplDBItem" type="text/x-jquery-tmpl" >      
         <form>
         <div class="row">
             <div class="span12 columns">
@@ -54,14 +54,21 @@
         </table>
         <div class="row">
             <div class="clearfix span16" >
-                    <div class="clearfix" id="cDumpName">
+                <div class="clearfix" id="cDumpName">
                     <label for="schemaName">Scheme name</label>
                     <div class="input">
                         <input class="error" id="schemaName" name="schemaName" size="30" type="text">
-                        <!--<span class="help-inline">scheme name to dump installation</span>-->
-                        <a class="btn" id="dumpInstall">Install</a>
                     </div>
+                </div>
+                <div class="clearfix" id="cRemapName">
+                    <label for="remapName">Remap from schema</label>
+                    <div class="input">
+                        <input class="error" id="remapName" name="remapName" size="30" type="text">
                     </div>
+                </div>
+                <div class="actions" id="cDumpName">
+                    <a class="btn" id="dumpInstall">Install</a>
+                </div>
             </div>
         </div>
 
@@ -152,11 +159,22 @@
         }
         
         function dumpInstall() {
+        	var validationError = 0;
         	var schemaName = $('#schemaName').val();
         	if( schemaName == null || schemaName == '' ) {
         		$('#cDumpName').addClass('error');
+        		validationError = 1;
         	} else {
         		$('#cDumpName').removeClass('error');
+        	} 
+        	var remapName = $('#remapName').val();
+        	if( remapName == null || remapName == '' ) {
+        		$('#cRemapName').addClass('error');
+        		validationError = 1;
+        	} else {
+        		$('#cRemapName').removeClass('error');
+        	} 
+        	if( validationError == 0 ) {
         		var link = $("#dbList").children(".active").children("a");
         		var dump = $(".dumpRadio:checked").val();
                 var requestUrl = "/api/sid/" + link.attr("host") + "/dump/install/" + dump + "/" + schemaName;
