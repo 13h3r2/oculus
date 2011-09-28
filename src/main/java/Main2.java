@@ -5,7 +5,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import ru.oculus.database.model.Sid;
-import ru.oculus.database.service.SidStorage;
+import ru.oculus.database.service.sid.SidStorage;
 
 public class Main2 {
 
@@ -17,7 +17,7 @@ public class Main2 {
         sid.setSshLogin("1");
         sid.setSshPassword("1");
         sid.setSysLogin("SYSMAN");
-        sid.setSysPassword("123321123");
+        sid.setSysPassword("*******");
 
         SidStorage storage = new SidStorage();
         storage.getSids().add(sid);
@@ -29,7 +29,7 @@ public class Main2 {
         sid.setSshLogin("1");
         sid.setSshPassword("1");
         sid.setSysLogin("SYSMAN");
-        sid.setSysPassword("arpm1qd1kb");
+        sid.setSysPassword("********");
         storage.getSids().add(sid);
 
         JAXBContext jc = JAXBContext.newInstance(Sid.class, SidStorage.class);

@@ -2,12 +2,10 @@ package ru.oculus.database.resources;
 
 import java.io.IOException;
 
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXBException;
 
@@ -20,43 +18,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.sun.jersey.spi.resource.Singleton;
 
 import ru.oculus.database.model.Sid;
-import ru.oculus.database.service.scheme.SchemeInfo;
-import ru.oculus.database.service.scheme.SchemeService;
 import ru.oculus.database.service.sid.SidService;
+import ru.oculus.database.service.tablespace.TablespaceInfo;
+import ru.oculus.database.service.tablespace.TablespaceService;
 
-@Path("/sid/{host}/{sid}/scheme")
+@Path("/sid/{host}/{sid}/tablespace")
 @Singleton
 @Produces(MediaType.APPLICATION_JSON)
-public class SchemeResource {
+public class TablespaceResource {
 
     @Autowired
-    private SchemeService schemeService;
+    private TablespaceService tablespaceService;
 
     @Autowired
     private SidService sidService;
 
     @GET
     public JSONArray getAll(
-            @PathParam(value = "host") String host,
-            @PathParam(value = "sid") String sidName,
-            @DefaultValue("0")  @QueryParam(value = "minSize") String minSizeGbString
+            @PathParam("host") String host,
+            @PathParam("sid") String sidName
             ) throws JAXBException, IOException, JSONException {
         Validate.notNull(host);
         Validate.notNull(sidName);
 
-        Sid sid = sidService.getSid(host,  sidName);
+        Sid sid = sidService.getSid(host, sidName);
         Validate.notNull(sid);
 
-        double minSizeGb = Double.parseDouble(minSizeGbString);
         JSONArray result = new JSONArray();
-        for (SchemeInfo walker : schemeService.getAllSchemes(sid)) {
-            if (walker.getSize().doubleValue() > minSizeGb) {
-                JSONObject obj = new JSONObject();
-                obj.put("connectionCount", walker.getConnectionCount());
-                obj.put("name", walker.getName());
-                obj.put("size", walker.getSize());
-                result.put(obj);
-            }
+        for (TablespaceInfo walker : tablespaceService.getAll(sid)) {
+            JSONObject obj = new JSONObject();
+            obj.put("totalSpace", walker.getTotalSpace());
+            obj.put("freeSpace", walker.getFreeSpace());
+            obj.put("name", walker.getName());
+            result.put(obj);
         }
 
         return result;

@@ -6,4 +6,5 @@ src/oculus/databases.pickle
 bin
 target
 .settings
+src/main/resources/sids.xml
 

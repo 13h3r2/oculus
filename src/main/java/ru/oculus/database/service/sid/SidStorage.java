@@ -1,4 +1,4 @@
-package ru.oculus.database.service;
+package ru.oculus.database.service.sid;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -9,6 +9,12 @@
 	<context:annotation-config>
 	</context:annotation-config>
 
-	<bean name="sidService" class="ru.oculus.database.service.SidService" />
+	<bean name="sidService" class="ru.oculus.database.service.sid.SidService" />
+	<bean name="sidResource" class="ru.oculus.database.resources.SidResource" />
+	<bean name="schemeService" class="ru.oculus.database.service.scheme.SchemeService" />
+	<bean name="schemeResource" class="ru.oculus.database.resources.SchemeResource" />
+	<bean name="tablespaceService" class="ru.oculus.database.service.tablespace.TablespaceService" />
+	<bean name="tablespaceResource" class="ru.oculus.database.resources.TablespaceResource" />
+
 
 </beans>

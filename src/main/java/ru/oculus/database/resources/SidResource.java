@@ -16,10 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.sun.jersey.spi.resource.Singleton;
 
 import ru.oculus.database.model.Sid;
-import ru.oculus.database.service.SidService;
+import ru.oculus.database.service.sid.SidService;
 
-@Singleton
 @Path("/database")
+@Singleton
 @Produces(MediaType.APPLICATION_JSON)
 public class SidResource {
 
@@ -29,7 +29,7 @@ public class SidResource {
     @GET
     public JSONArray getSIDList() throws JSONException, JAXBException, IOException {
         JSONArray result = new JSONArray();
-        for (Sid s : sidStorageProvider.getStorage().getSids()) {
+        for (Sid s : sidStorageProvider.getAllSids()) {
             JSONObject obj = new JSONObject();
             obj.put("host", s.getHost());
             obj.put("sid", s.getSid());
