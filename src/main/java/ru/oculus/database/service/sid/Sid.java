@@ -1,4 +1,4 @@
-package ru.oculus.database.model;
+package ru.oculus.database.service.sid;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

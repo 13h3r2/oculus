@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import ru.oculus.database.model.Sid;
+import ru.oculus.database.service.sid.Sid;
 import ru.oculus.database.service.sid.SidService;
 
 public class SchemeService {
@@ -16,7 +16,7 @@ public class SchemeService {
     @Autowired
     private SidService sidService;
 
-    public List<SchemeInfo> getAllSchemes(Sid sid) {
+    public List<SchemeInfo> getAll(Sid sid) {
         JdbcTemplate template = new JdbcTemplate(sidService.getDatasource(sid));
         List<SchemeInfo> result = template.query(
                 " select owner, ''||trunc(sum(bytes)/1024/1024/1024, 2), nvl(c_count, 0)"+

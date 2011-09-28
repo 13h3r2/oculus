@@ -9,7 +9,6 @@ import javax.xml.bind.JAXBException;
 
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import ru.oculus.database.model.Sid;
 
 public class SidService {
     private SidStorage storage;

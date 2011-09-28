@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import ru.oculus.database.model.Sid;
+import ru.oculus.database.service.sid.Sid;
 import ru.oculus.database.service.sid.SidService;
 
 public class TablespaceService {

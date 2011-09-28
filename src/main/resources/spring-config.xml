@@ -15,6 +15,8 @@
 	<bean name="schemeResource" class="ru.oculus.database.resources.SchemeResource" />
 	<bean name="tablespaceService" class="ru.oculus.database.service.tablespace.TablespaceService" />
 	<bean name="tablespaceResource" class="ru.oculus.database.resources.TablespaceResource" />
+	<bean name="dumpService" class="ru.oculus.database.service.dump.DumpService" />
+	<bean name="dumpResource" class="ru.oculus.database.resources.DumpResource" />
 
 
 </beans>

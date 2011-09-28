@@ -96,11 +96,11 @@
         <li><a href="#" host="${host}/${sid}" class="dbLink">${sid}@${host}</a></li>
     </script> 
     <script id = "tmplSchema" type="text/x-jquery-tmpl">
-                            <tr class="{{if connection_count > 0 && connection_count <= 3 }}schemaFree {{/if}}{{if connection_count > 3 }}schemaUsed {{/if}}dbSchema">
+                            <tr class="{{if connectionCount > 0 && connectionCount <= 3 }}schemaFree {{/if}}{{if connectionCount > 3 }}schemaUsed {{/if}}dbSchema">
                             <td >${name}</td>
                             <td >${size}GB</td>
-                            <td >${connection_count}</td>
-                            <td class="right">{{if connection_count < 1 }}<a class="btn danger schemaDrop">Drop</a>{{/if}}</td>
+                            <td >${connectionCount}</td>
+                            <td class="right">{{if connectionCount < 1 }}<a class="btn danger schemaDrop">Drop</a>{{/if}}</td>
                             </tr>
     </script> 
     <script id = "tmplTablespace" type="text/x-jquery-tmpl">
@@ -108,7 +108,7 @@
                             <td >${name}</td>
                             <td >${freeSpace}GB</td>
                             <td >${totalSpace}GB</td>
-                            <td >${percent}%</td>
+                            <td >${used}%</td>
                             </tr>
     </script> 
     <script id = "tmplDump" type="text/x-jquery-tmpl">
@@ -120,15 +120,15 @@
     <script type="text/javascript">
         $(document).ready(function(){
            $('#reloadDBList').click(function(){
-           	   console.log("get /api/database/list");
-        	   $.get("/api/database/list", loadDatabaseListCB);
+           	   console.log("get /api/sid");
+        	   $.get("/api/sid", loadDatabaseListCB);
            });
            
            table = $("#db");
            loadDatabaseListCB([{sid:"SID", host : "mox00.se-b.ru"}, {sid:"SID2", host : "mox02.se-b.ru"}]);
-           loadSchemasCB([{name:"scheme1", size:"50", connection_count:"123"}]);
-           loadSchemasCB([{name:"scheme2", size:"40", connection_count:"0"}]);
-           loadSchemasCB([{name:"scheme3", size:"20", connection_count:"1"}]);
+           loadSchemasCB([{name:"scheme1", size:"50", connectionCount:"123"}]);
+           loadSchemasCB([{name:"scheme2", size:"40", connectionCount:"0"}]);
+           loadSchemasCB([{name:"scheme3", size:"20", connectionCount:"1"}]);
            loadTablespacesCB([{name:"ASRDATA", freeSpace:103, totalSpace:154}]);
            loadDumpsCB([{name:"proasr-123871897239481289.dmp"}]);
            
@@ -159,7 +159,7 @@
         		$('#cDumpName').removeClass('error');
         		var link = $("#dbList").children(".active").children("a");
         		var dump = $(".dumpRadio:checked").val();
-                var requestUrl = "/api/database/info/" + link.attr("host") + "/dump/install/" + dump + "/" + schemaName;
+                var requestUrl = "/api/sid/" + link.attr("host") + "/dump/install/" + dump + "/" + schemaName;
                 console.log( "get" + requestUrl );
                 $.get(requestUrl, function(json){
                 	console.log("got");
@@ -194,7 +194,7 @@
         		
         	//get schema info
         	link = $("#dbList").children(".active").children("a");
-        	var requestUrl = "/api/database/info/" + link.attr("host") + "/schema";
+        	var requestUrl = "/api/sid/" + link.attr("host") + "/schema?minSize=1";
         	console.log("get " + requestUrl);
     	    $.get(requestUrl, loadSchemasCB);
         }
@@ -220,7 +220,7 @@
                 
             //get schema info
             link = $("#dbList").children(".active").children("a");
-            var requestUrl = "/api/database/info/" + link.attr("host") + "/tablespace";
+            var requestUrl = "/api/sid/" + link.attr("host") + "/tablespace";
             console.log("get " + requestUrl);
             $.get(requestUrl, loadTablespacesCB);
         }
@@ -246,7 +246,7 @@
                 
             //get schema info
             link = $("#dbList").children(".active").children("a");
-            var requestUrl = "/api/database/info/" + link.attr("host") + "/dump";
+            var requestUrl = "/api/sid/" + link.attr("host") + "/dump";
             console.log("get " + requestUrl);
             $.get(requestUrl, loadDumpsCB);
         }
@@ -268,7 +268,7 @@
           var b = $(button.target);
           var schema = b.parents("tr").children("td:first-child").text();
           var dbHost = $("#dbList").children(".active").children("a").attr("host");
-          var requestUrl = "/api/database/info/" + dbHost + "/drop/" + schema; 
+          var requestUrl = "/api/sid/" + dbHost + "/drop/" + schema; 
           console.log("get " + requestUrl);
           $.get(requestUrl, dropSchemaCB);          
         }

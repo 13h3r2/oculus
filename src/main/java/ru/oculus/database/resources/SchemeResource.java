@@ -11,7 +11,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.lang3.Validate;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -19,12 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sun.jersey.spi.resource.Singleton;
 
-import ru.oculus.database.model.Sid;
+import ru.oculus.database.service.ResourceUtils;
 import ru.oculus.database.service.scheme.SchemeInfo;
 import ru.oculus.database.service.scheme.SchemeService;
+import ru.oculus.database.service.sid.Sid;
 import ru.oculus.database.service.sid.SidService;
 
-@Path("/sid/{host}/{sid}/scheme")
+@Path("/sid/{host}/{sid}/schema")
 @Singleton
 @Produces(MediaType.APPLICATION_JSON)
 public class SchemeResource {
@@ -41,15 +41,15 @@ public class SchemeResource {
             @PathParam(value = "sid") String sidName,
             @DefaultValue("0")  @QueryParam(value = "minSize") String minSizeGbString
             ) throws JAXBException, IOException, JSONException {
-        Validate.notNull(host);
-        Validate.notNull(sidName);
+        ResourceUtils.notNull(host);
+        ResourceUtils.notNull(sidName);
 
         Sid sid = sidService.getSid(host,  sidName);
-        Validate.notNull(sid);
+        ResourceUtils.notNull(sid);
 
         double minSizeGb = Double.parseDouble(minSizeGbString);
         JSONArray result = new JSONArray();
-        for (SchemeInfo walker : schemeService.getAllSchemes(sid)) {
+        for (SchemeInfo walker : schemeService.getAll(sid)) {
             if (walker.getSize().doubleValue() > minSizeGb) {
                 JSONObject obj = new JSONObject();
                 obj.put("connectionCount", walker.getConnectionCount());

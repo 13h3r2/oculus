@@ -15,10 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sun.jersey.spi.resource.Singleton;
 
-import ru.oculus.database.model.Sid;
+import ru.oculus.database.service.sid.Sid;
 import ru.oculus.database.service.sid.SidService;
 
-@Path("/database")
+@Path("/sid")
 @Singleton
 @Produces(MediaType.APPLICATION_JSON)
 public class SidResource {
