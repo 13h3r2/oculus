@@ -6,6 +6,7 @@
 <body>
 
     <script src="jquery-1.6.2.js"></script>
+    <script src="http://twitter.github.com/bootstrap/1.3.0/bootstrap-modal.js"></script>
     <script src="jquery.tmpl.js"></script>   
     <script id = "tmplDBItem" type="text/x-jquery-tmpl" >      
         <form>
@@ -138,6 +139,10 @@
            loadSchemasCB([{name:"scheme3", size:"20", connectionCount:"1"}]);
            loadTablespacesCB([{name:"ASRDATA", freeSpace:103, totalSpace:154}]);
            loadDumpsCB([{name:"proasr-123871897239481289.dmp"}]);
+           
+           $("#confirmModalNo").click(function() {
+        	   $("#confirmModal").modal('hide');
+           });
            
            item = $('.tmplDBTabItem[host="mox00.se-b.ru/SID"]');
          });
@@ -287,8 +292,18 @@
           var schema = b.parents("tr").children("td:first-child").text();
           var dbHost = $("#dbList").children(".active").children("a").attr("host");
           var requestUrl = "/api/sid/" + dbHost + "/drop/" + schema; 
+
+          $("#confirmModalText").text("Drop schema " + schema + "?");
+          $("#confirmModalYes").unbind();
+          $("#confirmModalYes").click(function() {
+        	  $("#confirmModal").modal('hide');
+        	  console.log("yes!");
+          });
+          $("#confirmModal").modal('show');
+          /*
           console.log("get " + requestUrl);
-          $.get(requestUrl, dropSchemaCB);          
+          $.get(requestUrl, dropSchemaCB);
+          */
         }
         
         function dropSchemaCB(json) {
@@ -309,9 +324,11 @@
         	    b.text('-');        		
         	}
         }
+        
 	</script>
 <br/>
 <br/>
+
 <div class="container" id="db">
     <div class="container">
         <div class="row">
@@ -328,5 +345,24 @@
         </div>
     </div>
 </div>
+
+<!-- modal -->
+<div id="confirmModal" class="modal hide fade">
+<div class="modal-header">
+  <a href="#" class="close">&times;</a>
+  <h3>Confirm</h3>
+</div>
+<div class="modal-body">
+  <p id="confirmModalText">Drop selected schema?</p>
+</div>
+<div class="modal-footer">
+  <a href="#" class="btn primary" id="confirmModalYes">Yes</a>
+  <a href="#" class="btn secondary" id="confirmModalNo">No</a>
+</div>
+</div>
+
+
 </body>
 </html>
+
+
