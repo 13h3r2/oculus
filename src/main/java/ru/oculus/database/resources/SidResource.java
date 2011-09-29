@@ -8,6 +8,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -33,6 +34,7 @@ public class SidResource {
             JSONObject obj = new JSONObject();
             obj.put("host", s.getHost());
             obj.put("sid", s.getSid());
+            obj.put("presentation", s.getSid() + "@" + StringUtils.substringBefore(s.getHost(), "."));
             result.put(obj);
         }
         return result;
