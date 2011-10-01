@@ -39,7 +39,8 @@ public class SchemeResource {
     public JSONArray getAll(
             @PathParam(value = "host") String host,
             @PathParam(value = "sid") String sidName,
-            @DefaultValue("0")  @QueryParam(value = "minSize") String minSizeGbString
+            @DefaultValue("0")  @QueryParam(value = "minSize") String minSizeGbString,
+            @DefaultValue("")  @QueryParam(value = "withTable") String withTable
             ) throws JAXBException, IOException, JSONException {
         ResourceUtils.notNull(host);
         ResourceUtils.notNull(sidName);
@@ -49,8 +50,8 @@ public class SchemeResource {
 
         double minSizeGb = Double.parseDouble(minSizeGbString);
         JSONArray result = new JSONArray();
-        for (SchemeInfo walker : schemeService.getAll(sid)) {
-            if (walker.getSize().doubleValue() > minSizeGb) {
+        for (SchemeInfo walker : schemeService.getAll(sid, withTable)) {
+            if (minSizeGb == 0 || walker.getSize().doubleValue() > minSizeGb) {
                 JSONObject obj = new JSONObject();
                 obj.put("connectionCount", walker.getConnectionCount());
                 obj.put("name", walker.getName());

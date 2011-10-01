@@ -51,12 +51,22 @@ public class TablespaceResource {
             JSONObject obj = new JSONObject();
             obj.put("totalSpace", walker.getTotalSpace());
             obj.put("freeSpace", walker.getFreeSpace());
-            obj.put("used", new BigDecimal((walker.getTotalSpace().doubleValue() - walker.getFreeSpace().doubleValue()) / walker.getTotalSpace().doubleValue() * 100 ).setScale(2, RoundingMode.HALF_DOWN));
+            obj.put("used", new BigDecimal(getUsagePercentage(walker) ).setScale(2, RoundingMode.HALF_DOWN));
             obj.put("name", walker.getName());
             result.put(obj);
         }
 
         return result;
     }
+
+	private double getUsagePercentage(TablespaceInfo walker) {
+		if( walker.getTotalSpace().doubleValue() == 0) {
+			return 100;
+		}
+		
+		return (walker.getTotalSpace().doubleValue() 
+				- walker.getFreeSpace().doubleValue()) 
+				/ walker.getTotalSpace().doubleValue() * 100;
+	}
 
 }

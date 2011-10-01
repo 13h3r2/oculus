@@ -21,8 +21,8 @@ public class TablespaceService {
         List<TablespaceInfo> result = template.query("select f.tablespace_name as name, trunc(sum(u.bytes)/1024/1024/1024, 0) total, trunc(sum(f.bytes)/1024/1024/1024,0) as free \n" +
         		"from  ( select tablespace_name , sum(bytes) as bytes from sys.dba_free_space group by tablespace_name)  f\n" +
         		"inner join ( select tablespace_name , sum(bytes) as bytes from sys.dba_data_files group by tablespace_name) u on u.tablespace_name = f.tablespace_name\n" +
-        		"where f.tablespace_name = 'ASR_DATA'\n" +
-        		"group by f.tablespace_name", new RowMapper<TablespaceInfo>() {
+        		//"where f.tablespace_name = 'ASR_DATA'\n" +
+        		"group by f.tablespace_name order by sum(f.bytes) desc", new RowMapper<TablespaceInfo>() {
 
             public TablespaceInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
                 TablespaceInfo ts = new TablespaceInfo();
