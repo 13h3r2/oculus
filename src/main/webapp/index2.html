@@ -9,6 +9,11 @@ html,body {
 body {
 	padding-top: 10px;
 }
+
+.input > input {
+	min-height: 28px;
+}
+
 span.uneditable-input {
 	min-height: 18px;
 	cursor: auto;
@@ -46,7 +51,7 @@ span.uneditable-input {
                             <td >${name}</td>
                             <td >${size}GB</td>
                             <td >${connectionCount}</td>
-                            <td class="right">{{if connectionCount < 1 }}<a class="btn danger schemaDrop">Drop</a>{{/if}}</td>
+                            <td >${lastPatch}</td>
                             </tr>
     </script>
     <script id="tmplDump" type="text/x-jquery-tmpl">
@@ -103,6 +108,28 @@ span.uneditable-input {
 				</div>
 			</div>
 			<div class="content" id="content">
+				<div class="well" id="dumpInfo">
+					<form>
+					<fieldset>
+						<legend>prod_asr_dump_1259845239.dmp</legend>
+						<div class="clearfix">
+							<label for="schemeName">New scheme name</label>
+							<div class="input">
+								<input id="schemeName" value="scheme name here" />
+							</div>
+						</div>
+						<div class="clearfix">
+                            <label for="remapSchemeName">Remap from scheme</label>
+                            <div class="input">
+                                <input id="remapSchemeName" value="scheme name here" />
+                            </div>
+						</div>
+						<div class="actions">
+							<a href="#" class="btn">Install</a>
+						</div>
+					</fieldset>
+					</form>
+				</div>
 				<div class="well" id="schemeInfo">
 					<form>
 					<fieldset>
@@ -119,8 +146,17 @@ span.uneditable-input {
 								<span class="uneditable-input">asdfasdf</span>
 							</div>
 						</div>
+						<div class="clearfix">
+							<label for="siSize">Connections</label>
+							<div class="input">
+								<span class="uneditable-input">5</span>
+							</div>
+						</div>
 						<div class="actions">
-							<a href="#" class="btn">Drop</a>
+							<a href="#" class="btn danger">Drop</a>
+							<a href="#" class="btn danger">Killall</a>
+							<a href="#" class="btn">Grant</a>
+							<a href="#" class="btn">Dump</a>
 						</div>
 					</fieldset>
 					</form>

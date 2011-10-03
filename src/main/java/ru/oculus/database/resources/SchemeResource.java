@@ -11,6 +11,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -39,8 +40,8 @@ public class SchemeResource {
     public JSONArray getAll(
             @PathParam(value = "host") String host,
             @PathParam(value = "sid") String sidName,
-            @DefaultValue("0")  @QueryParam(value = "minSize") String minSizeGbString,
-            @DefaultValue("")  @QueryParam(value = "withTable") String withTable
+            @DefaultValue("0") @QueryParam(value = "minSize") String minSizeGbString,
+            @DefaultValue("") @QueryParam(value = "withTable") String withTable
             ) throws JAXBException, IOException, JSONException {
         ResourceUtils.notNull(host);
         ResourceUtils.notNull(sidName);
@@ -56,16 +57,17 @@ public class SchemeResource {
                 obj.put("connectionCount", walker.getConnectionCount());
                 obj.put("name", walker.getName());
                 obj.put("size", walker.getSize());
+                obj.put("lastPatch", ObjectUtils.toString(walker.getLastPatch()));
                 result.put(obj);
             }
         }
 
         return result;
     }
-    
+
     @GET
     @Path("{schemaName}")
-    public String getFullSchemeInfo( 
+    public String getFullSchemeInfo(
     		@PathParam(value = "host") String host,
             @PathParam(value = "sid") String sidName,
             @PathParam(value = "schemaName") String schemaName

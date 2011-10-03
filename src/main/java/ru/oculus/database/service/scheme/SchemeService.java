@@ -42,8 +42,17 @@ public class SchemeService {
                 }
             }
         );
-        
-        
+
+		for( SchemeInfo walker : result ) {
+		    String patch = template.queryForObject("select * from "+walker.getName()+".db_patches where rownum = 1 order by sprint desc, id desc;", new RowMapper<String>() {
+                public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    return null;
+                }
+		    });
+		    walker.setLastPatch(patch);
+		}
+
+
         return result;
     }
 }

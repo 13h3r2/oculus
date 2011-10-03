@@ -15,6 +15,16 @@ public class SchemeInfo {
 
     private int connectionCount;
 
+    private String lastPatch;
+
+    public String getLastPatch() {
+        return lastPatch;
+    }
+
+    public void setLastPatch(String lastPatch) {
+        this.lastPatch = lastPatch;
+    }
+
     public String getName() {
         return name;
     }
