@@ -20,18 +20,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.sun.jersey.spi.resource.Singleton;
 
 import ru.oculus.database.service.ResourceUtils;
-import ru.oculus.database.service.scheme.SchemeInfo;
-import ru.oculus.database.service.scheme.SchemeService;
+import ru.oculus.database.service.scheme.SchemaInfo;
+import ru.oculus.database.service.scheme.SchemaService;
 import ru.oculus.database.service.sid.Sid;
 import ru.oculus.database.service.sid.SidService;
 
 @Path("/sid/{host}/{sid}/schema")
 @Singleton
 @Produces(MediaType.APPLICATION_JSON)
-public class SchemeResource {
+public class SchemaResource {
 
     @Autowired
-    private SchemeService schemeService;
+    private SchemaService schemeService;
 
     @Autowired
     private SidService sidService;
@@ -51,7 +51,7 @@ public class SchemeResource {
 
         double minSizeGb = Double.parseDouble(minSizeGbString);
         JSONArray result = new JSONArray();
-        for (SchemeInfo walker : schemeService.getAll(sid, withTable)) {
+        for (SchemaInfo walker : schemeService.getAll(sid, withTable)) {
             if (minSizeGb == 0 || walker.getSize().doubleValue() > minSizeGb) {
                 JSONObject obj = new JSONObject();
                 obj.put("connectionCount", walker.getConnectionCount());
@@ -67,11 +67,18 @@ public class SchemeResource {
 
     @GET
     @Path("{schemaName}")
-    public String getFullSchemeInfo(
+    public SchemaInfo getFullSchemeInfo(
     		@PathParam(value = "host") String host,
             @PathParam(value = "sid") String sidName,
             @PathParam(value = "schemaName") String schemaName
-    		) {
-    	return schemaName;
+    		) throws JAXBException, IOException {
+    	ResourceUtils.notNull(host);
+        ResourceUtils.notNull(sidName);
+
+        Sid sid = sidService.getSid(host,  sidName);
+        ResourceUtils.notNull(sid);
+
+    	
+    	return schemeService.getSchemaInfo(sid, schemaName);
     }
 }

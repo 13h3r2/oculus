@@ -15,13 +15,32 @@ function Menu(linkDivMap) {
 
     this.init = function() {
         for ( var link in this.linkMap) {
-            console.log("init " + link);
-            console.log($("#" + link));
             $("#" + link).click(this.menuClick);
         }
         this.active = this.linkMap[0];
     };
 }
+
+$(document).ready(function(){
+    
+    menu = new Menu({
+        menuSchemas:{div:"schemas", cb: refreshSchemas},
+        menuTablespaces:{div:"tablespaces", cb: refreshTablespace },
+        menuDumps:{div:"dumps", cb:refreshDumps},
+        schemaInfoFake:{div:"schemaInfo", cb:refreshSchemaInfo}
+        });
+    menu.init();
+    
+   $('#reloadSidList').click(function(){
+       _ajaxCall("/api/sid", reloadSidListCB);
+   });
+   
+   $("#confirmModalNo").click(function() {
+       $("#confirmModal").modal('hide');
+   });
+ });
+
+
 
 function _ajaxCall(url, callback) {
     console.log("get " + url);
@@ -50,6 +69,27 @@ function refreshSchemasCB(json) {
     for (i in json) {
         $('#tmplSchema').tmpl(json[i]).appendTo(table);
     }
+    table.find("tr").click(showSchemaDetails);
+}
+function showSchemaDetails(source) {    
+    //var clickedSchema = $(source.target).parents("table").find("td").first().text();
+    var clickedSchema = $(source.target).parent().find("td").first().text();
+    console.log("schema info for" + clickedSchema);
+    $("#schemaDetailsName").text(clickedSchema);
+    menu.activate("schemaInfoFake");
+}
+function refreshSchemaInfo() {
+    var schemaName = $("#schemaDetailsName").text();
+    $("#schemaInfoSize").text("");
+    $("#schemaInfoLastPatch").text("");
+    $("#schemaInfoConnectionCount").text("");
+    _ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + schemaName, refreshSchemaInfoCB);
+}
+function refreshSchemaInfoCB(json) {
+    _ajaxCallEnd(json);
+    $("#schemaInfoSize").text(json['size']);
+    $("#schemaInfoLastPatch").text(json['lastPatch']);
+    $("#schemaInfoConnectionCount").text(json['connectionCount']);
 }
 
 function refreshDumpsCB(json) {
@@ -59,12 +99,12 @@ function refreshDumpsCB(json) {
         $('#tmplDump').tmpl(json[i]).appendTo(table);
     }
 }
-
 function refreshDumps() {
 	$("#dumps").find("tbody").children().remove();
 	_ajaxCall("/api/sid/" + _getSelectedSid() + "/dump", refreshDumpsCB);
     
 }
+
 
 function refreshTablespace() {
     $("#tablespaces").find("tbody").children().remove();

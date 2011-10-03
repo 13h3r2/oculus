@@ -31,6 +31,9 @@ span.uneditable-input {
 <body>
 
     <script src="jquery-1.6.2.js"></script>
+    <script type="text/javascript">
+        
+	</script>
     <script
         src="http://twitter.github.com/bootstrap/1.3.0/bootstrap-modal.js"></script>
     <script src="jquery.tmpl.js"></script>
@@ -39,7 +42,7 @@ span.uneditable-input {
         <option host="${host}" sid="${sid}">${presentation}</option>
     </script>
     <script id="tmplTablespace" type="text/x-jquery-tmpl">
-                            <tr class="tablespace">
+                            <tr>
                             <td >${name}</td>
                             <td >${freeSpace}GB</td>
                             <td >${totalSpace}GB</td>
@@ -47,7 +50,8 @@ span.uneditable-input {
                             </tr>
     </script>
     <script id="tmplSchema" type="text/x-jquery-tmpl">
-                            <tr class="{{if connectionCount > 0 && connectionCount <= 3 }}schemaFree {{/if}}{{if connectionCount > 3 }}schemaUsed {{/if}}dbSchema">
+                            <!--<tr class="{{if connectionCount > 0 && connectionCount <= 3 }}schemaFree {{/if}}{{if connectionCount > 3 }}schemaUsed {{/if}}dbSchema">-->
+                            <tr>
                             <td >${name}</td>
                             <td >${size}GB</td>
                             <td >${connectionCount}</td>
@@ -55,31 +59,11 @@ span.uneditable-input {
                             </tr>
     </script>
     <script id="tmplDump" type="text/x-jquery-tmpl">
-                            <tr class="dump">
+                            <tr>
                             <td ><input class="dumpRadio" type="radio" name ="dumps" value="${name}"/></td>
                             <td >${name}</td>
                             </tr>
     </script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-        	
-            menu = new Menu({
-                menuSchemas:{div:"schemas", cb: refreshSchemas},
-                menuTablespaces:{div:"tablespaces", cb: refreshTablespace },
-                menuDumps:{div:"dumps", cb:refreshDumps}
-                });
-        	menu.init();
-            
-           $('#reloadSidList').click(function(){
-           	   _ajaxCall("/api/sid", reloadSidListCB)
-           });
-           
-           $("#confirmModalNo").click(function() {
-        	   $("#confirmModal").modal('hide');
-           });
-         });
-        
-	</script>
 
 
     <div class="container">
@@ -130,26 +114,26 @@ span.uneditable-input {
 					</fieldset>
 					</form>
 				</div>
-				<div class="well" id="schemeInfo">
+				<div class="well" id="schemaInfo">
 					<form>
 					<fieldset>
-						<legend>DEV_ROMANCHUK</legend>
+						<legend id="schemaDetailsName">DEV_ROMANCHUK</legend>
 						<div class="clearfix">
 							<label for="siSize">Size</label>
 							<div class="input">
-								<span class="uneditable-input">50GB</span>
+								<span class="uneditable-input" id="schemaInfoSize">50GB</span>
 							</div>
 						</div>
 						<div class="clearfix">
 							<label for="siSize">Last patch</label>
 							<div class="input">
-								<span class="uneditable-input">asdfasdf</span>
+								<span class="uneditable-input" id="schemaInfoLastPatch">asdfasdf</span>
 							</div>
 						</div>
 						<div class="clearfix">
 							<label for="siSize">Connections</label>
 							<div class="input">
-								<span class="uneditable-input">5</span>
+								<span class="uneditable-input" id="schemaInfoConnectionCount">5</span>
 							</div>
 						</div>
 						<div class="actions">

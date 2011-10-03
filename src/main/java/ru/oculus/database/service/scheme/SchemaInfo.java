@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class SchemeInfo {
+public class SchemaInfo {
     private String name;
 
     /**
