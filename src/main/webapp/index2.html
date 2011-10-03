@@ -9,6 +9,10 @@ html,body {
 body {
 	padding-top: 10px;
 }
+span.uneditable-input {
+	min-height: 18px;
+	cursor: auto;
+}
 
 #header {
 	padding-bottom: 10px;	
@@ -70,100 +74,6 @@ body {
            });
          });
         
-        function dumpInstall() {
-        	var validationError = 0;
-        	var schemaName = $('#schemaName').val();
-        	if( schemaName == null || schemaName == '' ) {
-        		$('#cDumpName').addClass('error');
-        		validationError = 1;
-        	} else {
-        		$('#cDumpName').removeClass('error');
-        	} 
-        	var remapName = $('#remapName').val();
-        	if( remapName == null || remapName == '' ) {
-        		$('#cRemapName').addClass('error');
-        		validationError = 1;
-        	} else {
-        		$('#cRemapName').removeClass('error');
-        	} 
-        	if( validationError == 0 ) {
-        		var link = $("#dbList").children(".active").children("a");
-        		var dump = $(".dumpRadio:checked").val();
-                var requestUrl = "/api/sid/" + link.attr("host") + "/dump/install/" + dump + "/" + schemaName;
-                console.log( "get" + requestUrl );
-                $.get(requestUrl, function(json){
-                	console.log("got");
-                	console.log(json);
-                    
-                });
-        	}
-        	
-        }
-        
-        function loadDumps() {
-            $(".dumps").find(".loading").show();
-
-            //clear existing schemas
-            $(".dump").remove();
-                
-            //get schema info
-            link = $("#dbList").children(".active").children("a");
-            var requestUrl = "/api/sid/" + link.attr("host") + "/dump";
-            console.log("get " + requestUrl);
-            $.get(requestUrl, loadDumpsCB);
-        }
-        
-        function loadDumpsCB(json) {
-        	console.log("got");
-        	console.log(json);
-        	dbItem = $("#dbItem");
-	        //fill schemas
-	        table = dbItem.find("table.dumps").find("tbody");
-	        for(i in json) {
-	            $('#tmplDump').tmpl(json[i]).appendTo(table);   
-            }
-            $(".dumps").find(".loading").hide();
-            table.find(".dumpRadio").first().attr("checked", "checked");
-        }
-        
-        function dropSchema(button) {
-          var b = $(button.target);
-          var schema = b.parents("tr").children("td:first-child").text();
-          var dbHost = $("#dbList").children(".active").children("a").attr("host");
-          var requestUrl = "/api/sid/" + dbHost + "/drop/" + schema; 
-
-          $("#confirmModalText").text("Drop schema " + schema + "?");
-          $("#confirmModalYes").unbind();
-          $("#confirmModalYes").click(function() {
-        	  $("#confirmModal").modal('hide');
-        	  console.log("yes!");
-          });
-          $("#confirmModal").modal('show');
-          /*
-          console.log("get " + requestUrl);
-          $.get(requestUrl, dropSchemaCB);
-          */
-        }
-        
-        function dropSchemaCB(json) {
-          console.log("got");
-          console.log(json);
-        }
-        
-        function hideShow(button) {
-        	var b = $(button.target);
-        	if( b.text() == '-') {
-        		b.parent().children('.refresh').hide();
-        	    b.parents(".row").next().hide();        		
-        	    b.text('+');        		
-        	}
-        	else {
-        	    b.parents(".row").next().show();
-        		b.parent().children('.refresh').show();
-        	    b.text('-');        		
-        	}
-        }
-        
 	</script>
 
 
@@ -192,8 +102,28 @@ body {
 					</ul>
 				</div>
 			</div>
-			<div class="content">
+			<div class="content" id="content">
 				<div class="well" id="schemeInfo">
+					<form>
+					<fieldset>
+						<legend>DEV_ROMANCHUK</legend>
+						<div class="clearfix">
+							<label for="siSize">Size</label>
+							<div class="input">
+								<span class="uneditable-input">50GB</span>
+							</div>
+						</div>
+						<div class="clearfix">
+							<label for="siSize">Last patch</label>
+							<div class="input">
+								<span class="uneditable-input">asdfasdf</span>
+							</div>
+						</div>
+						<div class="actions">
+							<a href="#" class="btn">Drop</a>
+						</div>
+					</fieldset>
+					</form>
 				</div>
 				<div class="well" id="tablespaces">
 					<table>

@@ -62,5 +62,14 @@ public class SchemeResource {
 
         return result;
     }
-
+    
+    @GET
+    @Path("{schemaName}")
+    public String getFullSchemeInfo( 
+    		@PathParam(value = "host") String host,
+            @PathParam(value = "sid") String sidName,
+            @PathParam(value = "schemaName") String schemaName
+    		) {
+    	return schemaName;
+    }
 }
