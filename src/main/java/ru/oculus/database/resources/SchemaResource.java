@@ -44,11 +44,7 @@ public class SchemaResource {
             @DefaultValue("0") @QueryParam(value = "minSize") String minSizeGbString,
             @DefaultValue("") @QueryParam(value = "withTable") String withTable
             ) throws JAXBException, IOException, JSONException {
-        ResourceUtils.notNull(host, "Specify host");
-        ResourceUtils.notNull(sidName, "Specify sid");
-
-        Sid sid = sidService.getSid(host,  sidName);
-        ResourceUtils.notNull(sid, "Unkown sid " + sid + "@" + host);
+        Sid sid = getSid(host, sidName);
 
         double minSizeGb = Double.parseDouble(minSizeGbString);
         JSONArray result = new JSONArray();
@@ -74,11 +70,7 @@ public class SchemaResource {
             @PathParam(value = "schemaName") String schemaName,
             @QueryParam("action") String action
     		) throws JAXBException, IOException, InterruptedException {
-    	ResourceUtils.notNull(host, "Specify host");
-        ResourceUtils.notNull(sidName, "Specify sid");
-
-        Sid sid = sidService.getSid(host,  sidName);
-        ResourceUtils.notNull(sid, "Unkown sid " + sid + "@" + host);
+    	Sid sid = getSid(host, sidName);
 
         if( action == null ) {
             return schemeService.getSchemaInfo(sid, schemaName);
@@ -92,6 +84,14 @@ public class SchemaResource {
             return OperationResult.OK;
         }
         throw new NotFoundException();
+    }
+
+    private Sid getSid(String host, String sidName) throws JAXBException, IOException {
+        ResourceUtils.notNull(host, "Specify host");
+        ResourceUtils.notNull(sidName, "Specify sid");
+        Sid sid = sidService.getSid(host,  sidName);
+        ResourceUtils.notNull(sid, "Unkown sid " + sid + "@" + host);
+        return sid;
     }
 
 }

@@ -5,7 +5,8 @@ $(document).ready(function(){
         menuSchemas:{div:"schemas", cb: refreshSchemas},
         menuTablespaces:{div:"tablespaces", cb: refreshTablespace},
         menuDumps:{div:"dumps", cb:refreshDumps},
-        schemaRefresh:{div:"schemaInfo", cb:refreshSchemaInfo}
+        schemaRefresh:{div:"schemaInfo", cb:refreshSchemaInfo},
+        dumpInfoRefresh:{div:"dumpInfo", cb:refreshDumpInfo}
         });
     menu.init();
     
@@ -16,7 +17,8 @@ $(document).ready(function(){
    $("#confirmModalNo").click(function(){$("#confirmModal").modal('hide');});
    $("#schemaInfoDrop").click(dropSchema);
    $("#schemaInfoDisconnect").click(disconnectSchema);
-   $("#dumpInstall").click(function(){ _notificationInfo('test1')});
+   $("#dumpInstall").click(dumpInstall);
+   
  });
 
 
@@ -42,7 +44,6 @@ function refreshSchemasCB(json) {
 }
 function showSchemaDetails(source) {    
     var clickedSchema = $(source.target).parent().find("td").first().text();
-    console.log("schema info for" + clickedSchema);
     $("#schemaDetailsName").text(clickedSchema);
     menu.activate("schemaRefresh");
 }
@@ -58,15 +59,38 @@ function refreshSchemaInfoCB(json) {
     $("#schemaInfoConnectionCount").text(json['connectionCount']);
 }
 
+
+
+function showDumpDetails(source) {    
+	var clickedDump = $(source.target).parent().find("td").first().text();
+	$("#dumpDetailsName").text(clickedDump);
+	menu.activate("dumpInfoRefresh");
+}
+function refreshDumpInfo() {
+	$("#remapSchemaName").val("B_ASR_NEW");
+	$("#schemaName").val("");
+}
+function dumpInstall() {
+	var dumpName = $("#dumpDetailsName").text();
+	var schema = $("#schemaName").val();
+	var remapFrom = $("#remapSchemaName").val();
+	_ajaxCall("/api/sid/" + _getSelectedSid() + "/dump/" + dumpName + "?schema=" + schema + "&remapFrom=" + remapFrom + "&action=install", dumpInstallCB);
+}
+function dumpInstallCB(json) {
+	_notificationInfo("Dump installation started");
+	$("#schemaName").val("");
+}
+
+function refreshDumps() {
+	$("#dumps").find("tbody").children().remove();
+	_ajaxCall("/api/sid/" + _getSelectedSid() + "/dump", refreshDumpsCB);
+}
 function refreshDumpsCB(json) {
     table = $("#dumps").find("tbody");
     for (i in json) {
         $('#tmplDump').tmpl(json[i]).appendTo(table);
     }
-}
-function refreshDumps() {
-	$("#dumps").find("tbody").children().remove();
-	_ajaxCall("/api/sid/" + _getSelectedSid() + "/dump", refreshDumpsCB);
+    table.find("tr").click(showDumpDetails);
 }
 
 
@@ -80,7 +104,6 @@ function refreshTablespaceCB(json) {
         $('#tmplTablespace').tmpl(json[i]).appendTo(table);
     }
 }
-
 function reloadSidListCB(json) {
     list = $('#sids');
     list.children().remove();
@@ -101,10 +124,11 @@ function disconnectSchemaDoCB(json) {
 	menu.activate('schemaRefresh');
 }
 
+
 function dropSchema() {
-	_confirmedCall("Drop schema?", dropSchemeDo);
+	_confirmedCall("Drop schema?", dropSchemaDo);
 }
-function dropSchemeDo() {
+function dropSchemaDo() {
 	_confirmedCallFinished();
 	_ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema() + "?action=drop", dropSchemaDoCB, 'Dropping');
 }

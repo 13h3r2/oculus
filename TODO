@@ -1,10 +1,11 @@
 - icons
 - create dump 
-- handle rest fails
-- install dump
-- connection pooling
 - ssh pooling
+- status of installation
 
++ handle rest fails
++ install dump
++ connection pooling
 + dumps list
 + scheme info
 + drop scheme

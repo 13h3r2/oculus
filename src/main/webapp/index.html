@@ -64,7 +64,6 @@ span.uneditable-input {
     </script>
     <script id="tmplDump" type="text/x-jquery-tmpl">
                             <tr>
-                            <td ><input class="dumpRadio" type="radio" name ="dumps" value="${name}"/></td>
                             <td >${name}</td>
                             </tr>
     </script>
@@ -98,20 +97,20 @@ span.uneditable-input {
             <div class="content" id="content">
                 <div id="notifications">
                 </div>
-				<div class="well" id="dumpInfo">
+                <div class="well" id="dumpInfo">
 					<form>
 					<fieldset>
-						<legend>prod_asr_dump_1259845239.dmp</legend>
+						<legend id="dumpDetailsName">prod_asr_dump_1259845239.dmp</legend>
 						<div class="clearfix">
-							<label for="schemeName">New scheme name</label>
+							<label for="schemaName">New schema name</label>
 							<div class="input">
-								<input id="schemeName" value="scheme name here" />
+								<input id="schemaName" value="schema name here" />
 							</div>
 						</div>
 						<div class="clearfix">
-                            <label for="remapSchemeName">Remap from scheme</label>
+                            <label for="remapSchemaName">Remap from schema</label>
                             <div class="input">
-                                <input id="remapSchemeName" value="scheme name here" />
+                                <input id="remapSchemaName" value="B_ASR_NEW" />
                             </div>
 						</div>
 						<div class="actions">
@@ -174,12 +173,11 @@ span.uneditable-input {
 					<table>
 						<thead>
 							<tr>
-								<th width="5%">&nbsp;</th>
-								<th width="95%">Name</th>
+								<th >Name</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr><td><input class="dumpRadio" type="radio" name ="dumps" value="${name}"/></td><td>prod_asr_dump_1259845239.dmp</td></tr>
+							<tr><td>prod_asr_dump_1259845239.dmp</td></tr>
 						</tbody>
 					</table>
 				</div>
@@ -216,9 +214,6 @@ span.uneditable-input {
             <a href="#" class="btn secondary" id="confirmModalNo">No</a>
         </div>
     </div>
-    
-    
-
 </body>
 </html>
 
