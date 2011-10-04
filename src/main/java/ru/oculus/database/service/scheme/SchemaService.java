@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,6 +14,8 @@ import ru.oculus.database.service.sid.Sid;
 import ru.oculus.database.service.sid.SidConnectionService;
 
 public class SchemaService {
+
+    private static final Logger logger = Logger.getLogger(SchemaService.class);
 
     @Autowired
     private SidConnectionService sidService;
@@ -87,4 +90,15 @@ public class SchemaService {
 	    JdbcTemplate template = new JdbcTemplate(sidService.getDatasource(sid));
 	    template.execute("drop user " + name + " cascade");
 	}
+
+    public void disconnectAll(Sid sid, String schemaName) throws InterruptedException {
+        JdbcTemplate template = new JdbcTemplate(sidService.getDatasource(sid));
+        List<String> sessions = template.queryForList("select sid||','|| serial# from v$session where username='"+schemaName+"'", String.class);
+        for( String walker : sessions ) {
+            String sql = "ALTER SYSTEM KILL SESSION '"+ walker +"' IMMEDIATE";
+            logger.info(sql);
+            template.execute(sql);
+        }
+        Thread.sleep(500);
+    }
 }

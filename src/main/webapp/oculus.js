@@ -14,7 +14,8 @@ $(document).ready(function(){
    });
    
    $("#confirmModalNo").click(function(){$("#confirmModal").modal('hide');});
-   $("#schemaInfoDrop").click(dropScheme);
+   $("#schemaInfoDrop").click(dropSchema);
+   $("#schemaInfoDisconnect").click(disconnectSchema);
    $("#dumpInstall").click(function(){ _notificationInfo('test1')});
  });
 
@@ -88,10 +89,21 @@ function reloadSidListCB(json) {
     }
 }
 
-function dropScheme() {
-	_confirmedCall("Drop schema?", dropSchemeDo);
+
+function disconnectSchema() {
+	_confirmedCall("Disconnect all clients?", disconnectSchemaDo);
+}
+function disconnectSchemaDo() {
+	_confirmedCallFinished();
+	_ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema() + "?action=disconnectAll", disconnectSchemaDoCB, 'Disconnecting');
+}
+function disconnectSchemaDoCB(json) {
+	menu.activate('schemaInfoFake');
 }
 
+function dropSchema() {
+	_confirmedCall("Drop schema?", dropSchemeDo);
+}
 function dropSchemeDo() {
 	_confirmedCallFinished();
 	_ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema() + "?action=drop", dropSchemaDoCB, 'Dropping');

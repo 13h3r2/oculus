@@ -87,6 +87,10 @@ public class SchemaResource {
             schemeService.dropScheme(sid, schemaName);
             return OperationResult.OK;
         }
+        if( action.equals("disconnectAll")) {
+            schemeService.disconnectAll(sid, schemaName);
+            return OperationResult.OK;
+        }
         throw new NotFoundException();
     }
 
