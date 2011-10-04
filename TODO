@@ -3,8 +3,11 @@
 - ssh pooling
 - status of installation
 
-* truncate some shit
+- rethink truncate UI
+- truncate audit
+- tables info
 
++ truncate some shit
 + handle rest fails
 + install dump
 + connection pooling
