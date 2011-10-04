@@ -44,11 +44,11 @@ public class SchemaResource {
             @DefaultValue("0") @QueryParam(value = "minSize") String minSizeGbString,
             @DefaultValue("") @QueryParam(value = "withTable") String withTable
             ) throws JAXBException, IOException, JSONException {
-        ResourceUtils.notNull(host);
-        ResourceUtils.notNull(sidName);
+        ResourceUtils.notNull(host, "Specify host");
+        ResourceUtils.notNull(sidName, "Specify sid");
 
         Sid sid = sidService.getSid(host,  sidName);
-        ResourceUtils.notNull(sid);
+        ResourceUtils.notNull(sid, "Unkown sid " + sid + "@" + host);
 
         double minSizeGb = Double.parseDouble(minSizeGbString);
         JSONArray result = new JSONArray();
@@ -74,11 +74,11 @@ public class SchemaResource {
             @PathParam(value = "schemaName") String schemaName,
             @QueryParam("action") String action
     		) throws JAXBException, IOException, InterruptedException {
-    	ResourceUtils.notNull(host);
-        ResourceUtils.notNull(sidName);
+    	ResourceUtils.notNull(host, "Specify host");
+        ResourceUtils.notNull(sidName, "Specify sid");
 
         Sid sid = sidService.getSid(host,  sidName);
-        ResourceUtils.notNull(sid);
+        ResourceUtils.notNull(sid, "Unkown sid " + sid + "@" + host);
 
         if( action == null ) {
             return schemeService.getSchemaInfo(sid, schemaName);

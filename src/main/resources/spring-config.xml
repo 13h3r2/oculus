@@ -6,17 +6,21 @@
          http://www.springframework.org/schema/context
          http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-	<context:annotation-config>
-	</context:annotation-config>
+	<context:annotation-config />
 
 	<bean name="sidService" class="ru.oculus.database.service.sid.SidService" />
 	<bean name="sidResource" class="ru.oculus.database.resources.SidResource" />
 	<bean name="schemaService" class="ru.oculus.database.service.scheme.SchemaService" />
 	<bean name="schemaResource" class="ru.oculus.database.resources.SchemaResource" />
-	<bean name="tablespaceService" class="ru.oculus.database.service.tablespace.TablespaceService" />
+	<bean name="tablespaceService"
+		class="ru.oculus.database.service.tablespace.TablespaceService" />
 	<bean name="tablespaceResource" class="ru.oculus.database.resources.TablespaceResource" />
 	<bean name="dumpService" class="ru.oculus.database.service.dump.DumpService" />
 	<bean name="dumpResource" class="ru.oculus.database.resources.DumpResource" />
 
-
+	<!-- connection setup -->
+	<bean name="datasourcePrototype" scope="prototype" destroy-method="close" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+	</bean>
+	<bean name="sidConnectionService" class="ru.oculus.database.service.sid.SidConnectionService" />
 </beans>

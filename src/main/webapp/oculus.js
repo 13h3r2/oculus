@@ -33,7 +33,6 @@ function refreshSchemas() {
     _ajaxCall("/api/sid/" + _getSelectedSid() + "/schema?withTable=DB_PATCHES", refreshSchemasCB);
 }
 function refreshSchemasCB(json) {
-    _ajaxCallEnd(json);
     table = $("#schemas").find("tbody");
     for (i in json) {
         $('#tmplSchema').tmpl(json[i]).appendTo(table);
@@ -53,14 +52,12 @@ function refreshSchemaInfo() {
     _ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema(), refreshSchemaInfoCB);
 }
 function refreshSchemaInfoCB(json) {
-    _ajaxCallEnd(json);
     $("#schemaInfoSize").text(json['size']);
     $("#schemaInfoLastPatch").text(json['lastPatch']);
     $("#schemaInfoConnectionCount").text(json['connectionCount']);
 }
 
 function refreshDumpsCB(json) {
-    _ajaxCallEnd(json);
     table = $("#dumps").find("tbody");
     for (i in json) {
         $('#tmplDump').tmpl(json[i]).appendTo(table);
@@ -77,7 +74,6 @@ function refreshTablespace() {
     _ajaxCall("/api/sid/" + _getSelectedSid() + "/tablespace", refreshTablespaceCB);
 }
 function refreshTablespaceCB(json) {
-    _ajaxCallEnd(json);
     table = $("#tablespaces").find("tbody");
     for (i in json) {
         $('#tmplTablespace').tmpl(json[i]).appendTo(table);
@@ -85,7 +81,6 @@ function refreshTablespaceCB(json) {
 }
 
 function reloadSidListCB(json) {
-    _ajaxCallEnd(json);
     list = $('#sids');
     list.children().remove();
     for (i in json) {
@@ -102,6 +97,5 @@ function dropSchemeDo() {
 	_ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema() + "?action=drop", dropSchemaDoCB, 'Dropping');
 }
 function dropSchemaDoCB(json) {
-	_ajaxCallEnd(json);
 	menu.activate('menuSchemas');
 }

@@ -8,7 +8,7 @@ function Menu(linkDivMap) {
 
 	this.activate = function(link) {
 		this.active = link;
-		$('#content').children().hide();
+		$('#content').children(":not(#notifications)").hide();
 		this.linkMap[link]['cb']();
 		$("#" + this.linkMap[link]['div']).show();
 	};
@@ -40,7 +40,13 @@ function _ajaxCall(url, callback, message) {
 		$("#loadingLabel").text(message + '...');
 	}
 	$("#loadingLabel").show();
-	$.get(url, callback);
+	$.get(url, function() {})
+		.success(callback)
+		.error(_ajaxCallFail)
+		.complete(_ajaxCallEnd);
+}
+function _ajaxCallFail(error) {
+	_notificationError("" + error.status + ": " + error.responseText);
 }
 
 function _ajaxCallEnd(json) {

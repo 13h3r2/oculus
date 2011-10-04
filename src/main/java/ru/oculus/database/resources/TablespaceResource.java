@@ -40,11 +40,11 @@ public class TablespaceResource {
             @PathParam("host") String host,
             @PathParam("sid") String sidName
             ) throws JAXBException, IOException, JSONException {
-        ResourceUtils.notNull(host);
-        ResourceUtils.notNull(sidName);
+        ResourceUtils.notNull(host, "Specify host");
+        ResourceUtils.notNull(sidName, "Specify sid");
 
         Sid sid = sidService.getSid(host, sidName);
-        ResourceUtils.notNull(sid);
+        ResourceUtils.notNull(sid, "Unkown sid " + sid + "@" + host);
 
         JSONArray result = new JSONArray();
         for (TablespaceInfo walker : tablespaceService.getAll(sid)) {
@@ -63,9 +63,9 @@ public class TablespaceResource {
 		if( walker.getTotalSpace().doubleValue() == 0) {
 			return 100;
 		}
-		
-		return (walker.getTotalSpace().doubleValue() 
-				- walker.getFreeSpace().doubleValue()) 
+
+		return (walker.getTotalSpace().doubleValue()
+				- walker.getFreeSpace().doubleValue())
 				/ walker.getTotalSpace().doubleValue() * 100;
 	}
 

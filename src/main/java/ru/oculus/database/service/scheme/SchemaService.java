@@ -10,12 +10,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import ru.oculus.database.service.sid.Sid;
-import ru.oculus.database.service.sid.SidService;
+import ru.oculus.database.service.sid.SidConnectionService;
 
 public class SchemaService {
 
     @Autowired
-    private SidService sidService;
+    private SidConnectionService sidService;
 
     public SchemaInfo getSchemaInfo(Sid sid, String name) {
     	JdbcTemplate template = new JdbcTemplate(sidService.getDatasource(sid));

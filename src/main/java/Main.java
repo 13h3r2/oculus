@@ -1,5 +1,9 @@
 import java.io.IOException;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
 import com.sun.grizzly.http.embed.GrizzlyWebServer;
 import com.sun.grizzly.http.servlet.ServletAdapter;
 import com.sun.grizzly.tcp.http11.GrizzlyAdapter;
@@ -10,6 +14,11 @@ import com.sun.jersey.spi.spring.container.servlet.SpringServlet;
 public class Main {
 
     public static void main(String[] args) throws IOException {
+
+        BasicConfigurator.configure();
+        Logger.getLogger("ru.oculus").setLevel(Level.INFO);
+        Logger.getRootLogger().setLevel(Level.WARN);
+
         GrizzlyWebServer ws = new GrizzlyWebServer(9998, "src/main/webapp");
 
         // Jersey web resources

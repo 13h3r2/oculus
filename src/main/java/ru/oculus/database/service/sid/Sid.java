@@ -67,4 +67,25 @@ public class Sid {
     public void setDumpDir(String dumpDir) {
         this.dumpDir = dumpDir;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if( obj == null ) {
+            return false;
+        }
+        if( obj instanceof Sid) {
+            return getSid().equals(((Sid) obj).getSid()) && getHost().equals(((Sid) obj).getHost());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getSid().hashCode() + getHost().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return getSid() + "@" + getHost();
+    }
 }
