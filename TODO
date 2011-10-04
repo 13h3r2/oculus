@@ -1,5 +1,12 @@
 - icons
-- make dump 
-* install dump
+- create dump 
+- handle rest fails
+- install dump
+- connection pooling
+- ssh pooling
 
 + dumps list
++ scheme info
++ drop scheme
++ confirmation modal windows
++ notifications support

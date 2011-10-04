@@ -16,13 +16,13 @@ public class SchemaService {
 
     @Autowired
     private SidService sidService;
-    
+
     public SchemaInfo getSchemaInfo(Sid sid, String name) {
     	JdbcTemplate template = new JdbcTemplate(sidService.getDatasource(sid));
         String sql = " select dbs.owner, trunc(sum(bytes)/1024/1024/1024, 2), nvl(c_count, 0)"+
 		" from dba_segments dbs"+
 		" left outer join ( select count(*) as c_count, s.username as username from v$session s group by s.username) s on s.username = dbs.owner" +
-		" where dbs.owner = '" + name + "'" +  
+		" where dbs.owner = '" + name + "'" +
         " group by dbs.owner, c_count"+
 		" order by sum(bytes) desc";
         SchemaInfo result = template.queryForObject(sql, new RowMapper<SchemaInfo>() {
@@ -66,20 +66,25 @@ public class SchemaService {
             }
         );
 
-//		for( SchemaInfo walker : result ) {
-//		}
+		for( SchemaInfo walker : result ) {
+		    walker.setLastPatch(getLastVersion(template, walker.getName()));
+		}
 
 
         return result;
     }
 
 	private String getLastVersion(JdbcTemplate template, String name) {
-		System.out.println("check " + name);
 		String query = "select * from (select * from ( select sprint as patch from "+name+".db_patches order by sprint desc, id desc ) where rownum = 1 union (select 'N/A' from dual)) where rownum=1";
 		return template.queryForObject(query, new RowMapper<String>() {
 		    public String mapRow(ResultSet rs, int rowNum) throws SQLException {
 		        return rs.getString("patch");
 		    }
 		});
+	}
+
+	public void dropScheme(Sid sid, String name) {
+	    JdbcTemplate template = new JdbcTemplate(sidService.getDatasource(sid));
+	    template.execute("drop user " + name + " cascade");
 	}
 }

@@ -17,6 +17,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.sun.jersey.api.NotFoundException;
 import com.sun.jersey.spi.resource.Singleton;
 
 import ru.oculus.database.service.ResourceUtils;
@@ -67,18 +68,26 @@ public class SchemaResource {
 
     @GET
     @Path("{schemaName}")
-    public SchemaInfo getFullSchemeInfo(
+    public Object getFullSchemeInfo(
     		@PathParam(value = "host") String host,
             @PathParam(value = "sid") String sidName,
-            @PathParam(value = "schemaName") String schemaName
-    		) throws JAXBException, IOException {
+            @PathParam(value = "schemaName") String schemaName,
+            @QueryParam("action") String action
+    		) throws JAXBException, IOException, InterruptedException {
     	ResourceUtils.notNull(host);
         ResourceUtils.notNull(sidName);
 
         Sid sid = sidService.getSid(host,  sidName);
         ResourceUtils.notNull(sid);
 
-    	
-    	return schemeService.getSchemaInfo(sid, schemaName);
+        if( action == null ) {
+            return schemeService.getSchemaInfo(sid, schemaName);
+        }
+        if( action.equals("drop")) {
+            schemeService.dropScheme(sid, schemaName);
+            return OperationResult.OK;
+        }
+        throw new NotFoundException();
     }
+
 }
