@@ -3,6 +3,8 @@
 - ssh pooling
 - status of installation
 
+* truncate some shit
+
 + handle rest fails
 + install dump
 + connection pooling

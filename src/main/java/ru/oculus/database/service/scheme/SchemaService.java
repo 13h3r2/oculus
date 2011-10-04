@@ -101,4 +101,17 @@ public class SchemaService {
         }
         Thread.sleep(500);
     }
+
+    public void truncate(Sid sid, String schemaName) {
+        JdbcTemplate template = new JdbcTemplate(sidService.getDatasource(sid));
+        template.execute("truncate table " + schemaName + ".logs");
+        template.execute("truncate table " + schemaName + ".contract_reports");
+        template.execute("truncate table " + schemaName + ".flat_card_reports");
+        template.execute("alter table " + schemaName + ".flat_card_reports disable constraint fc_r_report_id_2_fr");
+        template.execute("alter table " + schemaName + ".contract_reports disable constraint cr_report_id_2_fr");
+        template.execute("truncate table " + schemaName + ".filled_report");
+        template.execute("alter table " + schemaName + ".flat_card_reports enable constraint fc_r_report_id_2_fr");
+        template.execute("alter table " + schemaName + ".contract_reports enable CONSTRAINT CR_REPORT_ID_2_FR");
+
+    }
 }

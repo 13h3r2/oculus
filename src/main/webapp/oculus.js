@@ -16,6 +16,7 @@ $(document).ready(function(){
    
    $("#confirmModalNo").click(function(){$("#confirmModal").modal('hide');});
    $("#schemaInfoDrop").click(dropSchema);
+   $("#schemaInfoTruncate").click(truncateSchema);
    $("#schemaInfoDisconnect").click(disconnectSchema);
    $("#dumpInstall").click(dumpInstall);
    
@@ -134,4 +135,15 @@ function dropSchemaDo() {
 }
 function dropSchemaDoCB(json) {
 	menu.activate('menuSchemas');
+}
+
+function truncateSchema() {
+	_confirmedCall("Truncate some shit from schema?", truncateSchemaDo);
+}
+function truncateSchemaDo() {
+	_confirmedCallFinished();
+	_ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema() + "?action=truncate", truncateSchemaDoCB, 'Truncating');
+}
+function truncateSchemaDoCB(json) {
+	menu.activate('schemaRefresh');
 }
