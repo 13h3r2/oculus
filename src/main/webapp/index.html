@@ -62,6 +62,12 @@ span.uneditable-input {
                             <td >${lastPatch}</td>
                             </tr>
     </script>
+    <script id="tmplTable" type="text/x-jquery-tmpl">
+                            <tr>
+                            <td >${name}</td>
+                            <td >${size}GB</td>
+                            </tr>
+    </script>
     <script id="tmplDump" type="text/x-jquery-tmpl">
                             <tr>
                             <td >${name}</td>
@@ -151,7 +157,26 @@ span.uneditable-input {
 							<a href="#" class="btn">Grant</a>
 							<a href="#" class="btn">Dump</a>
 						</div>
-					</fieldset>
+							<table id="tables">
+								<thead>
+									<tr>
+										<th width="80%">Name</th>
+										<th width="20%">Size</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>CHARGES</td>										
+										<td>13GB</td>										
+									</tr>
+									<tr>
+										<td>P=AYMENTS</td>										
+										<td>13GB</td>										
+									</tr>
+								</tbody>
+							</table>
+
+						</fieldset>
 					</form>
 				</div>
 				<div class="well" id="tablespaces">

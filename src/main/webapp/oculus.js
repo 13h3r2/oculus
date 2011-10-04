@@ -49,6 +49,7 @@ function showSchemaDetails(source) {
     menu.activate("schemaRefresh");
 }
 function refreshSchemaInfo() {
+    $("#tables").find("tbody").children().remove();
     $("#schemaInfoSize").text("");
     $("#schemaInfoLastPatch").text("");
     $("#schemaInfoConnectionCount").text("");
@@ -58,6 +59,13 @@ function refreshSchemaInfoCB(json) {
     $("#schemaInfoSize").text(json['size']);
     $("#schemaInfoLastPatch").text(json['lastPatch']);
     $("#schemaInfoConnectionCount").text(json['connectionCount']);
+    _ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema() + "/table", refreshSchemaInfoCBTable);
+}
+function refreshSchemaInfoCBTable(json) {
+    table = $("#tables").find("tbody");
+    for (i in json) {
+        $('#tmplTable').tmpl(json[i]).appendTo(table);
+    }
 }
 
 

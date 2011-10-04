@@ -1,11 +1,14 @@
-- icons
-- create dump 
+- sql factory here
 - ssh pooling
-- status of installation
-
+- database metadata. should contains description and dump time or so
 - rethink truncate UI
 - truncate audit
 - tables info
+- create dump 
+- status of installation
+- rest style api (with put and post instead of get)
+- icons
+
 
 + truncate some shit
 + handle rest fails

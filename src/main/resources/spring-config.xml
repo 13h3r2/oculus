@@ -17,6 +17,8 @@
 	<bean name="tablespaceResource" class="ru.oculus.database.resources.TablespaceResource" />
 	<bean name="dumpService" class="ru.oculus.database.service.dump.DumpService" />
 	<bean name="dumpResource" class="ru.oculus.database.resources.DumpResource" />
+	<bean name="tableService" class="ru.oculus.database.service.table.TableService" />
+	<bean name="tableResource" class="ru.oculus.database.resources.TableResource" />
 
 	<!-- connection setup -->
 	<bean name="datasourcePrototype" scope="prototype" destroy-method="close" class="org.apache.commons.dbcp.BasicDataSource">
