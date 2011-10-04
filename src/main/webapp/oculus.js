@@ -5,7 +5,7 @@ $(document).ready(function(){
         menuSchemas:{div:"schemas", cb: refreshSchemas},
         menuTablespaces:{div:"tablespaces", cb: refreshTablespace},
         menuDumps:{div:"dumps", cb:refreshDumps},
-        schemaInfoFake:{div:"schemaInfo", cb:refreshSchemaInfo}
+        schemaRefresh:{div:"schemaInfo", cb:refreshSchemaInfo}
         });
     menu.init();
     
@@ -44,7 +44,7 @@ function showSchemaDetails(source) {
     var clickedSchema = $(source.target).parent().find("td").first().text();
     console.log("schema info for" + clickedSchema);
     $("#schemaDetailsName").text(clickedSchema);
-    menu.activate("schemaInfoFake");
+    menu.activate("schemaRefresh");
 }
 function refreshSchemaInfo() {
     $("#schemaInfoSize").text("");
@@ -98,7 +98,7 @@ function disconnectSchemaDo() {
 	_ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema() + "?action=disconnectAll", disconnectSchemaDoCB, 'Disconnecting');
 }
 function disconnectSchemaDoCB(json) {
-	menu.activate('schemaInfoFake');
+	menu.activate('schemaRefresh');
 }
 
 function dropSchema() {

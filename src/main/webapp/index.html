@@ -97,10 +97,6 @@ span.uneditable-input {
             </div>
             <div class="content" id="content">
                 <div id="notifications">
-                    <div class="alert-message error fade in" data-alert="alert">
-                        <a class="close" href="#">x</a>
-                            <small>Schema dropped</small>
-                    </div>
                 </div>
 				<div class="well" id="dumpInfo">
 					<form>
@@ -125,6 +121,9 @@ span.uneditable-input {
 					</form>
 				</div>
 				<div class="well" id="schemaInfo">
+                    <div class="right">
+                        <a class="btn" id="schemaRefresh">Refresh</a>
+                    </div>
 					<form>
 					<fieldset>
 						<legend id="schemaDetailsName">DEV_ROMANCHUK</legend>
