@@ -19,7 +19,7 @@ $(document).ready(function(){
    $("#schemaInfoTruncate").click(truncateSchema);
    $("#schemaInfoDisconnect").click(disconnectSchema);
    $("#dumpInstall").click(dumpInstall);
-   
+
  });
 
 
@@ -41,6 +41,7 @@ function refreshSchemasCB(json) {
     for (i in json) {
         $('#tmplSchema').tmpl(json[i]).appendTo(table);
     }
+    $("#tSchemas").tablesorter();
     table.find("tr").click(showSchemaDetails);
 }
 function showSchemaDetails(source) {    
@@ -59,7 +60,7 @@ function refreshSchemaInfoCB(json) {
     $("#schemaInfoSize").text(json['size']);
     $("#schemaInfoLastPatch").text(json['lastPatch']);
     $("#schemaInfoConnectionCount").text(json['connectionCount']);
-    _ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema() + "/table", refreshSchemaInfoCBTable);
+    _ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema() + "/table?minSize=1000", refreshSchemaInfoCBTable);
 }
 function refreshSchemaInfoCBTable(json) {
     table = $("#tables").find("tbody");

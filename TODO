@@ -1,15 +1,15 @@
-- sql factory here
 - ssh pooling
 - database metadata. should contains description and dump time or so
 - rethink truncate UI
 - truncate audit
-- tables info
 - create dump 
 - status of installation
 - rest style api (with put and post instead of get)
 - icons
+- sort tables for sids
 
-
++ sql factory here
++ tables info
 + truncate some shit
 + handle rest fails
 + install dump

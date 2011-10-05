@@ -21,10 +21,11 @@ public class TableService {
     @Autowired
     private SidConnectionService sidService;
 
-    public List<TableInfo> getAllTables(Sid sid, String schemaName) {
+    public List<TableInfo> getAllTables(Sid sid, String schemaName, int minSize) {
     	JdbcTemplate template = new JdbcTemplate(sidService.getDatasource(sid));
     	Statement st = StatementLoader.loadStatement(TableService.class.getResource("get-all.sql"));
     	st.setParameter("owner", schemaName);
+    	st.setParameter("minSize", minSize);
     	logger.info(st.toString());
     	return template.query(st.toString(), new RowMapper<TableInfo>() {
 			public TableInfo mapRow(ResultSet rs, int rowNum)
@@ -34,8 +35,8 @@ public class TableService {
 				result.setSize(rs.getBigDecimal(2));
 				return result ;
 			}
-    		
+
     	});
-    	
+
     }
 }
