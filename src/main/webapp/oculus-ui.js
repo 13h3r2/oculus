@@ -32,18 +32,22 @@ function _confirmedCallFinished() {
 	$("#confirmModal").modal('hide');
 }
 
-function _ajaxCall(url, callback, message) {
+function _ajaxCall(url, callback, message, noEndCallback) {
 	console.log("get " + url);
-	if(message == null ) {
-		$("#loadingLabel").text('Loading...');
-	}else {
-		$("#loadingLabel").text(message + '...');
+	var messageText = 'Loading...';
+	if(message != null ) {
+		messageText = message + '...';
 	}
+	
+	$("#loadingLabel").text(messageText);
 	$("#loadingLabel").show();
-	$.get(url, function() {})
-		.success(callback)
+	get = $.get(url, function() {})
 		.error(_ajaxCallFail)
-		.complete(_ajaxCallEnd);
+		.success(callback)
+	;
+	if( noEndCallback == null || noEndCallback == false) {
+		get.complete(_ajaxCallEnd);
+	}
 }
 function _ajaxCallFail(error) {
 	_notificationError("" + error.status + ": " + error.responseText);

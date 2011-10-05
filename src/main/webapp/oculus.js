@@ -19,6 +19,7 @@ $(document).ready(function(){
    $("#schemaInfoTruncate").click(truncateSchema);
    $("#schemaInfoDisconnect").click(disconnectSchema);
    $("#dumpInstall").click(dumpInstall);
+   $("#tables").tablesorter();
 
  });
 
@@ -41,7 +42,7 @@ function refreshSchemasCB(json) {
     for (i in json) {
         $('#tmplSchema').tmpl(json[i]).appendTo(table);
     }
-    $("#tSchemas").tablesorter();
+    $("#schemas").children("table").tablesorter();
     table.find("tr").click(showSchemaDetails);
 }
 function showSchemaDetails(source) {    
@@ -54,7 +55,7 @@ function refreshSchemaInfo() {
     $("#schemaInfoSize").text("");
     $("#schemaInfoLastPatch").text("");
     $("#schemaInfoConnectionCount").text("");
-    _ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema(), refreshSchemaInfoCB);
+    _ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema(), refreshSchemaInfoCB, null, true);
 }
 function refreshSchemaInfoCB(json) {
     $("#schemaInfoSize").text(json['size']);
@@ -67,6 +68,7 @@ function refreshSchemaInfoCBTable(json) {
     for (i in json) {
         $('#tmplTable').tmpl(json[i]).appendTo(table);
     }
+    $("#tables").tablesorter();
 }
 
 
@@ -114,6 +116,10 @@ function refreshTablespaceCB(json) {
         $('#tmplTablespace').tmpl(json[i]).appendTo(table);
     }
 }
+
+
+
+
 function reloadSidListCB(json) {
     list = $('#sids');
     list.children().remove();
