@@ -36,6 +36,7 @@ span.uneditable-input {
     <script src="jquery.tmpl.js"></script>
     <script src="jquery.tablesorter.min.js"></script>
     <script src="oculus.js"></script>
+    <script src="oculus-schema.js"></script>
     <script src="oculus-ui.js"></script>
     <script id="tmplSidItem" type="text/x-jquery-tmpl">
         <option host="${host}" sid="${sid}">${presentation}</option>
@@ -49,8 +50,8 @@ span.uneditable-input {
     <script id="tmplTablespace" type="text/x-jquery-tmpl">
                             <tr>
                             <td >${name}</td>
-                            <td >${freeSpace}GB</td>
-                            <td >${totalSpace}GB</td>
+                            <td >${freeSpace}</td>
+                            <td >${totalSpace}</td>
                             <td >${used}%</td>
                             </tr>
     </script>
@@ -58,7 +59,7 @@ span.uneditable-input {
                             <!--<tr class="{{if connectionCount > 0 && connectionCount <= 3 }}schemaFree {{/if}}{{if connectionCount > 3 }}schemaUsed {{/if}}dbSchema">-->
                             <tr>
                             <td >${name}</td>
-                            <td >${size}GB</td>
+                            <td >${size}</td>
                             <td >${connectionCount}</td>
                             <td >${lastPatch}</td>
                             </tr>
@@ -66,7 +67,7 @@ span.uneditable-input {
     <script id="tmplTable" type="text/x-jquery-tmpl">
                             <tr>
                             <td >${name}</td>
-                            <td >${size}MB</td>
+                            <td >${size}</td>
                             </tr>
     </script>
     <script id="tmplDump" type="text/x-jquery-tmpl">
@@ -153,16 +154,15 @@ span.uneditable-input {
 						</div>
 						<div class="actions">
 							<a href="#" class="btn danger" id="schemaInfoDrop">Drop</a>
-							<a href="#" class="btn danger" id="schemaInfoDisconnect">Disconnect</a>
-							<a href="#" class="btn danger" id="schemaInfoTruncate">Truncate</a>
-							<a href="#" class="btn">Grant</a>
+							<a href="#" class="btn danger" id="schemaInfoDisconnect">Disconnect</a>							
+							<a href="#" class="btn success" id="schemaInfoGrant">Grant</a>
 							<a href="#" class="btn">Dump</a>
 						</div>
 							<table id="tables">
 								<thead>
 									<tr>
 										<th width="80%">Name</th>
-										<th width="20%">Size</th>
+										<th width="20%">Size, MB</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -184,7 +184,9 @@ span.uneditable-input {
 									</tr>
 								</tbody>
 							</table>
-
+                            <div class="actions">
+                                <a href="#" class="btn danger" id="schemaInfoTruncate">Truncate</a>
+                            </div>
 						</fieldset>
 					</form>
 				</div>
@@ -193,8 +195,8 @@ span.uneditable-input {
 						<thead>
 							<tr>
 								<th width="40%">Name</th>
-								<th width="20%">Free</th>
-								<th width="20%">Total</th>
+								<th width="20%">Free, GB</th>
+								<th width="20%">Total, GB</th>
 								<th width="20%">Used</th>
 							</tr>
 						</thead>
@@ -221,7 +223,7 @@ span.uneditable-input {
 						<thead>
 							<tr>
 								<th width="40%" class="orange header">Name</th>
-								<th width="20%" class="blue header">Size</th>
+								<th width="20%" class="blue header">Size, GB</th>
 								<th width="20%" class="green header">Connections</th>
 								<th width="20%" class="red header">Last patch</th>
 							</tr>

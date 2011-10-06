@@ -12,6 +12,9 @@ import org.springframework.jdbc.core.RowMapper;
 
 import ru.oculus.database.service.sid.Sid;
 import ru.oculus.database.service.sid.SidConnectionService;
+import ru.sqlfactory.Statement;
+import ru.sqlfactory.StatementLoader;
+import ru.sqlfactory.converters.predefined.RawStringConverter;
 
 public class SchemaService {
 
@@ -113,5 +116,15 @@ public class SchemaService {
         template.execute("alter table " + schemaName + ".flat_card_reports enable constraint fc_r_report_id_2_fr");
         template.execute("alter table " + schemaName + ".contract_reports enable CONSTRAINT CR_REPORT_ID_2_FR");
 
+    }
+
+    public void grant(Sid sid, String schemaName) {
+        JdbcTemplate template = new JdbcTemplate(sidService.getDatasource(sid));
+        Statement st = StatementLoader.loadStatement("alter user /*{:user*/dev_romanchuk/*}*/ quota unlimited on ASR_DATA");
+        st.setParameter("user", schemaName, RawStringConverter.INSTANCE);
+        template.execute(st.toString());
+        st = StatementLoader.loadStatement("alter user /*{:user*/dev_romanchuk/*}*/ quota unlimited on ASR_INDEX");
+        st.setParameter("user", schemaName, RawStringConverter.INSTANCE);
+        template.execute(st.toString());
     }
 }

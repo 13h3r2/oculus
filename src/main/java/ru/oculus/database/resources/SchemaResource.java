@@ -87,6 +87,10 @@ public class SchemaResource {
             schemeService.truncate(sid, schemaName);
             return OperationResult.OK;
         }
+        if( action.equals("grant")) {
+            schemeService.grant(sid, schemaName);
+            return OperationResult.OK;
+        }
         throw new NotFoundException();
     }
 
