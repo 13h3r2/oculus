@@ -8,16 +8,22 @@ function Menu(linkDivMap) {
 
     this.activate = function (link) {
         this.active = link;
-        $('#content').children(":not(#notifications)").hide();
-        this.linkMap[link]['cb']();
-        $("#" + this.linkMap[link]['div']).show();
+        this.invalidate();
     };
+
+    this.invalidate = function() {
+        $('#content').children(":not(#notifications)").hide();
+        this.linkMap[this.active]['cb']();
+        $("#" + this.linkMap[this.active]['div']).show();
+    }
 
     this.init = function () {
         for (var link in this.linkMap) {
+            if(this.active == null ) {
+                this.active = link;
+            }
             $("#" + link).click(this.menuClick);
         }
-        this.active = this.linkMap[0];
     };
 }
 

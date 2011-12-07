@@ -23,6 +23,9 @@ $(document).ready(function () {
     $("#dumpInstall").click(dumpInstall);
 
     $("#schemas").children("table").tablesorter();
+    $("#sids").change(function() {
+        menu.invalidate();
+    });
 
 });
 
