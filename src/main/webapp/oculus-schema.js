@@ -1,5 +1,5 @@
 function _getSelectedSchema() {
-	return $("#schemaDetailsName").text();
+    return $("#schemaDetailsName").text();
 }
 
 function refreshSchemas() {
@@ -13,11 +13,13 @@ function refreshSchemasCB(json) {
     }
     console.log($("#schemas").children("table"));
     $("#schemas table").trigger("update");
-    var sorting = [[1,1]]; 
-    $("#schemas table").trigger("sorton",[sorting]); 
+    var sorting = [
+        [1, 1]
+    ];
+    $("#schemas table").trigger("sorton", [sorting]);
     table.find("tr").click(showSchemaDetails);
 }
-function showSchemaDetails(source) {    
+function showSchemaDetails(source) {
     var clickedSchema = $(source.target).parent().find("td").first().text();
     $("#schemaDetailsName").text(clickedSchema);
     menu.activate("schemaRefresh");
@@ -43,45 +45,43 @@ function refreshSchemaInfoCBTable(json) {
 }
 
 function disconnectSchema() {
-	_confirmedCall("Disconnect all clients?", disconnectSchemaDo);
+    _confirmedCall("Disconnect all clients?", disconnectSchemaDo);
 }
 function disconnectSchemaDo() {
-	_confirmedCallFinished();
-	_ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema() + "?action=disconnectAll", disconnectSchemaDoCB, 'Disconnecting');
+    _confirmedCallFinished();
+    _ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema() + "?action=disconnectAll", disconnectSchemaDoCB, 'Disconnecting');
 }
 function disconnectSchemaDoCB(json) {
-	menu.activate('schemaRefresh');
+    menu.activate('schemaRefresh');
 }
 
 
 function dropSchema() {
-	_confirmedCall("Drop schema?", dropSchemaDo);
+    _confirmedCall("Drop schema?", dropSchemaDo);
 }
 function dropSchemaDo() {
-	_confirmedCallFinished();
-	_ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema() + "?action=drop", dropSchemaDoCB, 'Dropping');
+    _confirmedCallFinished();
+    _ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema() + "?action=drop", dropSchemaDoCB, 'Dropping');
 }
 function dropSchemaDoCB(json) {
-	menu.activate('menuSchemas');
+    menu.activate('menuSchemas');
 }
-
 
 function truncateSchema() {
-	_confirmedCall("Truncate some shit from schema?", truncateSchemaDo);
+    _confirmedCall("Truncate some shit from schema?", truncateSchemaDo);
 }
 function truncateSchemaDo() {
-	_confirmedCallFinished();
-	_ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema() + "?action=truncate", truncateSchemaDoCB, 'Truncating');
+    _confirmedCallFinished();
+    _ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema() + "?action=truncate", truncateSchemaDoCB, 'Truncating');
 }
 function truncateSchemaDoCB(json) {
-	menu.activate('schemaRefresh');
+    menu.activate('schemaRefresh');
 }
-
 
 function grantSchema() {
-	_confirmedCall("Grant access to tablespaces?", grantSchemaDo);
+    _confirmedCall("Grant access to tablespaces?", grantSchemaDo);
 }
 function grantSchemaDo() {
-	_confirmedCallFinished();
-	_ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema() + "?action=grant", null, 'Granting');
+    _confirmedCallFinished();
+    _ajaxCall("/api/sid/" + _getSelectedSid() + "/schema/" + _getSelectedSchema() + "?action=grant", null, 'Granting');
 }

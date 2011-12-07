@@ -1,29 +1,30 @@
+$(document).ready(function () {
 
-$(document).ready(function(){
-    
     menu = new Menu({
-        menuSchemas:{div:"schemas", cb: refreshSchemas},
-        menuTablespaces:{div:"tablespaces", cb: refreshTablespace},
+        menuSchemas:{div:"schemas", cb:refreshSchemas},
+        menuTablespaces:{div:"tablespaces", cb:refreshTablespace},
         menuDumps:{div:"dumps", cb:refreshDumps},
         schemaRefresh:{div:"schemaInfo", cb:refreshSchemaInfo},
         dumpInfoRefresh:{div:"dumpInfo", cb:refreshDumpInfo}
-        });
+    });
     menu.init();
-    
-   $('#reloadSidList').click(function(){
-       _ajaxCall("/api/sid", reloadSidListCB);
-   });
-   
-   $("#confirmModalNo").click(function(){$("#confirmModal").modal('hide');});
-   $("#schemaInfoDrop").click(dropSchema);
-   $("#schemaInfoTruncate").click(truncateSchema);
-   $("#schemaInfoDisconnect").click(disconnectSchema);
-   $("#schemaInfoGrant").click(grantSchema);
-   $("#dumpInstall").click(dumpInstall);
-   
-   $("#schemas").children("table").tablesorter();
 
- });
+    $('#reloadSidList').click(function () {
+        _ajaxCall("/api/sid", reloadSidListCB);
+    });
+
+    $("#confirmModalNo").click(function () {
+        $("#confirmModal").modal('hide');
+    });
+    $("#schemaInfoDrop").click(dropSchema);
+    $("#schemaInfoTruncate").click(truncateSchema);
+    $("#schemaInfoDisconnect").click(disconnectSchema);
+    $("#schemaInfoGrant").click(grantSchema);
+    $("#dumpInstall").click(dumpInstall);
+
+    $("#schemas").children("table").tablesorter();
+
+});
 
 
 function _getSelectedSid() {
@@ -32,33 +33,32 @@ function _getSelectedSid() {
 }
 
 
-function showDumpDetails(source) {    
-	var clickedDump = $(source.target).parent().find("td").first().text();
-	$("#dumpDetailsName").text(clickedDump);
-	menu.activate("dumpInfoRefresh");
+function showDumpDetails(source) {
+    var clickedDump = $(source.target).parent().find("td").first().text();
+    $("#dumpDetailsName").text(clickedDump);
+    menu.activate("dumpInfoRefresh");
 }
 function refreshDumpInfo() {
-	$("#remapSchemaName").val("B_ASR_NEW");
-	$("#schemaName").val("");
+    $("#remapSchemaName").val("B_ASR_NEW");
+    $("#schemaName").val("");
 }
 
 
 function dumpInstall() {
-	var dumpName = $("#dumpDetailsName").text();
-	var schema = $("#schemaName").val();
-	var remapFrom = $("#remapSchemaName").val();
-	_ajaxCall("/api/sid/" + _getSelectedSid() + "/dump/" + dumpName + "?schema=" + schema + "&remapFrom=" + remapFrom + "&action=install", dumpInstallCB);
+    var dumpName = $("#dumpDetailsName").text();
+    var schema = $("#schemaName").val();
+    var remapFrom = $("#remapSchemaName").val();
+    _ajaxCall("/api/sid/" + _getSelectedSid() + "/dump/" + dumpName + "?schema=" + schema + "&remapFrom=" + remapFrom + "&action=install", dumpInstallCB);
 }
 function dumpInstallCB(json) {
-	_notificationInfo("Dump installation started");
-	$("#schemaName").val("");
+    _notificationInfo("Dump installation started");
+    $("#schemaName").val("");
 }
-
 
 
 function refreshDumps() {
-	$("#dumps").find("tbody").children().remove();
-	_ajaxCall("/api/sid/" + _getSelectedSid() + "/dump", refreshDumpsCB);
+    $("#dumps").find("tbody").children().remove();
+    _ajaxCall("/api/sid/" + _getSelectedSid() + "/dump", refreshDumpsCB);
 }
 function refreshDumpsCB(json) {
     table = $("#dumps").find("tbody");

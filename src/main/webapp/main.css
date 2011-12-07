@@ -1,30 +1,35 @@
 .right {
-	text-align: right;
+    text-align: right;
 }
+
 .center {
-	text-align: center;
+    text-align: center;
 }
+
 .dbItem {
-	padding-bottom: 10px;
+    padding-bottom: 10px;
 }
-
-
 
 .schemaFree {
-	background: e0ffe0;
+    background: #e0ffe0;
 }
+
 .schemaFree:hover {
-	background: c0ffc0;
+    background: #c0ffc0;
 }
+
 .schemaUsed {
-	background: ffe8d0;
+    background: #ffe8d0;
 }
+
 .schemaUsed:hover {
-	background: ffd0a0;
+    background: #ffd0a0;
 }
+
 tbody tr {
-    background: fcfcfc;	
+    background: #fcfcfc;
 }
+
 tbody tr:hover {
-    background: f0f0f0;	
+    background: #f0f0f0;
 }
