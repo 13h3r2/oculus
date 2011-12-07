@@ -37,7 +37,7 @@ public class SidConnectionService {
         logger.info("Created DS for " + sid.toString());
         org.apache.commons.dbcp.BasicDataSource dataSource = (BasicDataSource) factory.getBean("datasourcePrototype");
         dataSource.setUrl("jdbc:oracle:thin:@" + sid.getHost() + ":1521:" + sid.getSid());
-        dataSource.addConnectionProperty("internal_logon", "sysdba");
+        //dataSource.addConnectionProperty("internal_logon", "sysdba");
         dataSource.setUsername(sid.getSysLogin());
         dataSource.setPassword(sid.getSysPassword());
         return dataSource;

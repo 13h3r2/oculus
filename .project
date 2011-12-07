@@ -33,16 +33,4 @@
 		<nature>org.python.pydev.pythonNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>lib-global_dsld_support</name>
-			<type>2</type>
-			<location>/home/ar/.groovy/greclipse/global_dsld_support</location>
-		</link>
-		<link>
-			<name>lib-plugin_dsld_support</name>
-			<type>2</type>
-			<location>/opt/eclipse-37/eclipse/plugins/org.codehaus.groovy_1.8.0.xx-20110628-1600-e37/plugin_dsld_support</location>
-		</link>
-	</linkedResources>
 </projectDescription>
