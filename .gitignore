@@ -8,3 +8,4 @@ target
 .settings
 src/main/resources/sids.xml
 .idea
+test-output
