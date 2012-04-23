@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import ru.oculus.database.service.SSHCommand;
 import ru.oculus.database.service.sid.Sid;
 import ru.oculus.database.service.sid.SidConnectionService;
 import ru.sqlfactory.Statement;
@@ -23,7 +24,7 @@ public class SchemaService {
     @Autowired
     private SidConnectionService sidService;
 
-    public SchemaInfo getSchemaInfo(Sid sid, String name) {
+    public SchemaInfo getSchemaInfo(Sid sid, String name) throws Exception {
     	JdbcTemplate template = new JdbcTemplate(sidService.getDatasource(sid));
         String sql = " select dbs.owner, trunc(sum(bytes)/1024/1024/1024, 2), nvl(c_count, 0)"+
 		" from dba_segments dbs"+
@@ -43,7 +44,13 @@ public class SchemaService {
 			}
         });
 		result.setLastPatch(getLastVersion(template, result.getName()));
+        result.setImport(isDumpInstallation(sid, name));
         return result;
+    }
+
+    public boolean isDumpInstallation(Sid sid, String name) throws Exception {
+        String grepResult = new SSHCommand(sid, "ps afx | grep imp_test_data | grep " + name + " | grep -v grep | wc -l").run().trim();
+        return Integer.parseInt(grepResult) > 0;
     }
 
     public List<SchemaInfo> getAll(Sid sid, String withTable) {

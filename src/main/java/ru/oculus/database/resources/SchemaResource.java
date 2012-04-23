@@ -69,7 +69,7 @@ public class SchemaResource {
             @PathParam(value = "sid") String sidName,
             @PathParam(value = "schemaName") String schemaName,
             @QueryParam("action") String action
-    		) throws JAXBException, IOException, InterruptedException {
+    		) throws Exception, InterruptedException {
     	Sid sid = getSid(host, sidName);
 
         if( action == null ) {

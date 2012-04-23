@@ -17,6 +17,8 @@ public class SchemaInfo {
 
     private String lastPatch;
 
+    private Boolean isImport = null;
+
     public String getLastPatch() {
         return lastPatch;
     }
@@ -49,4 +51,11 @@ public class SchemaInfo {
         this.connectionCount = connectionCount;
     }
 
+    public Boolean getImport() {
+        return isImport;
+    }
+
+    public void setImport(Boolean anImport) {
+        isImport = anImport;
+    }
 }
